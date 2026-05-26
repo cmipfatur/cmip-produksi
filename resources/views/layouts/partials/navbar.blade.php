@@ -1,29 +1,34 @@
-<nav class="navbar navbar-expand-lg bg-white border-bottom px-3" style="height:56px;">
+<nav class="navbar navbar-expand-lg bg-white border-bottom px-3" style="position:sticky;top:0;z-index:1000;">
 
     {{-- BRAND --}}
-    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-        <img src="{{ asset('images/Logo_enhanced.png') }}" alt="Logo" height="36" style="object-fit:contain;">
-        <div class="d-none d-sm-flex flex-column lh-sm">
-            <span class="fw-bold text-dark" style="font-size:13px;">Admin COR</span>
-            <small class="text-muted" style="font-size:10px;">Sistem Produksi Cor</small>
+    <a class="navbar-brand d-flex align-items-center gap-1" href="#">
+        <img src="{{ asset('images/Logo_enhanced.png') }}" alt="Logo" height="32" style="object-fit:contain;">
+        <div class="lh-1">
+            <div class="fw-semibold text-dark" style="font-size:13px;">Admin BST</div>
+            <small class="text-muted" style="font-size:9px;">Sistem Produksi BST</small>
         </div>
     </a>
 
-    {{-- TOGGLER --}}
-    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    {{-- MOBILE: icon kanan + toggler --}}
+    <div class="d-flex d-lg-none align-items-center gap-1 ms-auto">
+        <button class="btn btn-sm btn-light border-0 position-relative" style="width:36px;height:36px;">
+            <i class="bi bi-bell fs-6 text-secondary"></i>
+            <span
+                class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle border border-white"
+                style="width:8px;height:8px;"></span>
+        </button>
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
 
-    <div class="collapse navbar-collapse" id="navbarTop">
+    <div class="collapse navbar-collapse" id="mainNavbar">
 
-        {{-- LEFT MENU --}}
-        <ul class="navbar-nav me-auto align-items-lg-center gap-1">
+        {{-- ========== DESKTOP MENU ========== --}}
+        <ul class="navbar-nav me-auto align-items-lg-center gap-1 d-none d-lg-flex">
 
-            <li class="nav-item">
-                <a class="nav-link text-secondary px-3" style="font-size:13px;" href="#">Master</a>
-            </li>
-
-            {{-- PRODUKSI DROPDOWN --}}
+            {{-- PRODUKSI MEGA DROPDOWN --}}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle fw-semibold px-3" style="color:#f59e0b;font-size:13px;"
                     href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -31,18 +36,16 @@
                 </a>
                 <div class="dropdown-menu p-3 shadow-sm border rounded-3" style="min-width:680px;">
                     <div class="row g-0">
-                        {{-- SUSUT --}}
                         <div class="col border-end pe-3">
                             <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
                                 style="font-size:10px;letter-spacing:.06em;">Susut</p>
                             <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;background:#fff7ed;color:#f59e0b;">
+                                <i class="bi bi-scissors"></i> Potong Pohon
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
                                 style="font-size:13px;">
                                 <i class="bi bi-list-check text-muted"></i> Susut Per Proses
-                            </a>
-                            <a href="#"
-                                class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2 active"
-                                style="font-size:13px;background:#fff7ed;color:#f59e0b;">
-                                <i class="bi bi-scissors text-warning"></i> Potong Pohon
                             </a>
                             <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
                                 style="font-size:13px;">
@@ -53,7 +56,6 @@
                                 <i class="bi bi-exclamation-circle text-muted"></i> Susut Global
                             </a>
                         </div>
-                        {{-- TRANSAKSI PRODUKSI --}}
                         <div class="col border-end px-3">
                             <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
                                 style="font-size:10px;letter-spacing:.06em;">Transaksi Produksi</p>
@@ -70,7 +72,6 @@
                                 <i class="bi bi-hammer text-muted"></i> Kikir Tukang
                             </a>
                         </div>
-                        {{-- LAINNYA --}}
                         <div class="col border-end px-3">
                             <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
                                 style="font-size:10px;letter-spacing:.06em;">Lainnya</p>
@@ -91,7 +92,97 @@
                                 <i class="bi bi-layers text-muted"></i> WIP Cor
                             </a>
                         </div>
-                        {{-- QUICK ACCESS --}}
+                        <div class="col ps-3" style="min-width:160px;">
+                            <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
+                                style="font-size:10px;letter-spacing:.06em;">Quick Access</p>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-star-fill text-warning" style="font-size:12px;"></i> Potong Pohon
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-star-fill text-warning" style="font-size:12px;"></i> Per Cor
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-star-fill text-warning" style="font-size:12px;"></i> WIP Cor
+                            </a>
+                            <div class="border-top mt-2 pt-2">
+                                <a href="#"
+                                    class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2 text-muted"
+                                    style="font-size:12px;">
+                                    <i class="bi bi-gear" style="font-size:13px;"></i> Kelola Favorit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            {{-- TRANSAKSI MEGA DROPDOWN --}}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle fw-semibold px-3" style="color:#f59e0b;font-size:13px;"
+                    href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                    Transaksi
+                </a>
+                <div class="dropdown-menu p-3 shadow-sm border rounded-3" style="min-width:680px;">
+                    <div class="row g-0">
+                        <div class="col border-end pe-3">
+                            <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
+                                style="font-size:10px;letter-spacing:.06em;">Susut</p>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;background:#fff7ed;color:#f59e0b;">
+                                <i class="bi bi-scissors"></i> Potong Pohon
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-list-check text-muted"></i> Susut Per Proses
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-file-text text-muted"></i> Per Cor
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-exclamation-circle text-muted"></i> Susut Global
+                            </a>
+                        </div>
+                        <div class="col border-end px-3">
+                            <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
+                                style="font-size:10px;letter-spacing:.06em;">Transaksi Produksi</p>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-tools text-muted"></i> Kikir
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-brush text-muted"></i> Kikir Brush
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-hammer text-muted"></i> Kikir Tukang
+                            </a>
+                        </div>
+                        <div class="col border-end px-3">
+                            <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
+                                style="font-size:10px;letter-spacing:.06em;">Lainnya</p>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-scissors text-muted"></i> Susut Cukit
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-arrow-repeat text-muted"></i> Afkir Reparasi
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-image text-muted"></i> Gambar
+                            </a>
+                            <a href="#" class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-2"
+                                style="font-size:13px;">
+                                <i class="bi bi-layers text-muted"></i> WIP Cor
+                            </a>
+                        </div>
                         <div class="col ps-3" style="min-width:160px;">
                             <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
                                 style="font-size:10px;letter-spacing:.06em;">Quick Access</p>
@@ -131,45 +222,156 @@
             <li class="nav-item">
                 <a class="nav-link text-secondary px-3" style="font-size:13px;" href="#">Settings</a>
             </li>
-
         </ul>
 
-        {{-- RIGHT SIDE --}}
-        <div class="d-flex align-items-center gap-2 ms-lg-auto mt-3 mt-lg-0">
-
-            {{-- SEARCH --}}
+        {{-- DESKTOP RIGHT --}}
+        <div class="d-none d-lg-flex align-items-center gap-2 ms-auto">
             <div class="input-group input-group-sm" style="width:220px;">
-                <span class="input-group-text bg-light border-end-0 text-muted">
-                    <i class="bi bi-search"></i>
-                </span>
+                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control bg-light border-start-0 border-end-0"
                     placeholder="Cari menu, modul, atau data..." style="font-size:12px;">
                 <span class="input-group-text bg-light border-start-0">
                     <kbd class="bg-white border rounded px-1" style="font-size:10px;">Ctrl K</kbd>
                 </span>
             </div>
-
-            {{-- STAR --}}
-            <button class="btn btn-sm btn-light border-0 text-muted">
-                <i class="bi bi-star fs-6"></i>
-            </button>
-
-            {{-- NOTIFICATION --}}
             <button class="btn btn-sm btn-light border-0 text-muted position-relative">
                 <i class="bi bi-bell fs-6"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     style="font-size:9px;">5</span>
             </button>
-
-            {{-- USER --}}
-            <div class="d-flex align-items-center gap-2 px-2 py-1 rounded-2 cursor-pointer" style="cursor:pointer;"
-                onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background=''">
+            <div class="d-flex align-items-center gap-2 px-2 py-1 rounded-2" style="cursor:pointer;">
                 <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-semibold"
                     style="width:32px;height:32px;font-size:12px;">AC</div>
-                <div class="d-none d-md-block lh-sm">
-                    <div class="fw-semibold text-dark" style="font-size:13px;">Admin Cor</div>
+                <div class="lh-sm">
+                    <div class="fw-semibold text-dark" style="font-size:13px;">Admin BST</div>
                     <small class="text-muted" style="font-size:11px;">Administrator</small>
                 </div>
+            </div>
+        </div>
+
+        {{-- ========== MOBILE DRAWER ========== --}}
+        <div class="d-lg-none border-top mt-2">
+
+            {{-- SEARCH --}}
+            <div class="px-1 py-2">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0"><i
+                            class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control bg-light border-start-0"
+                        placeholder="Cari menu, modul, atau data..." style="font-size:13px;">
+                </div>
+            </div>
+
+            <ul class="list-unstyled mb-0 pb-2">
+
+                <li class="px-1 pt-1 pb-1">
+                    <small class="text-uppercase text-muted fw-bold px-2"
+                        style="font-size:10px;letter-spacing:.06em;">Menu</small>
+                </li>
+
+                <li>
+                    <a href="#"
+                        class="d-flex align-items-center gap-3 px-2 py-2 rounded-2 text-dark text-decoration-none"
+                        style="font-size:14px;">
+                        <i class="bi bi-box text-muted" style="width:20px;"></i> Master
+                        <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:12px;"></i>
+                    </a>
+                </li>
+
+                {{-- PRODUKSI MOBILE --}}
+                <li>
+                    <a class="d-flex align-items-center gap-3 px-2 py-2 rounded-2 text-decoration-none fw-medium"
+                        style="font-size:14px;color:#f59e0b;background:#fff7ed;" data-bs-toggle="collapse"
+                        href="#mobileProduksiSub" aria-expanded="false">
+                        <i class="bi bi-building-gear" style="width:20px;color:#f59e0b;"></i> Produksi
+                        <i class="bi bi-chevron-down ms-auto" style="font-size:12px;color:#f59e0b;"></i>
+                    </a>
+                    <div class="collapse" id="mobileProduksiSub">
+                        <div class="ps-4 py-1">
+                            <small class="d-block px-2 pt-2 pb-1 text-uppercase text-muted fw-bold"
+                                style="font-size:10px;letter-spacing:.05em;">Susut</small>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none"
+                                style="font-size:13px;background:#fff7ed;color:#f59e0b;font-weight:500;">
+                                <i class="bi bi-scissors"></i> Potong Pohon
+                            </a>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none text-secondary"
+                                style="font-size:13px;"><i class="bi bi-list-check"></i> Susut Per Proses</a>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none text-secondary"
+                                style="font-size:13px;"><i class="bi bi-file-text"></i> Per Cor</a>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none text-secondary"
+                                style="font-size:13px;"><i class="bi bi-exclamation-circle"></i> Susut Global</a>
+                            <hr class="my-1 mx-2">
+                            <small class="d-block px-2 pt-1 pb-1 text-uppercase text-muted fw-bold"
+                                style="font-size:10px;letter-spacing:.05em;">Transaksi Produksi</small>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none text-secondary"
+                                style="font-size:13px;"><i class="bi bi-tools"></i> Kikir</a>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none text-secondary"
+                                style="font-size:13px;"><i class="bi bi-brush"></i> Kikir Brush</a>
+                            <a href="#"
+                                class="d-flex align-items-center gap-2 px-2 py-2 rounded-2 text-decoration-none text-secondary"
+                                style="font-size:13px;"><i class="bi bi-hammer"></i> Kikir Tukang</a>
+                            <hr class="my-1 mx-2">
+                            <small class="d-block px-2 pt-1 pb-2 text-uppercase text-muted fw-bold"
+                                style="font-size:10px;letter-spacing:.05em;">Quick Access</small>
+                            <div class="d-flex flex-wrap gap-2 px-2 pb-2">
+                                <a href="#"
+                                    class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"
+                                    style="background:#fff7ed;color:#92400e;border:0.5px solid #fde68a;padding:5px 10px;font-size:12px;">
+                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> Potong Pohon
+                                </a>
+                                <a href="#"
+                                    class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"
+                                    style="background:#fff7ed;color:#92400e;border:0.5px solid #fde68a;padding:5px 10px;font-size:12px;">
+                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> Per Cor
+                                </a>
+                                <a href="#"
+                                    class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"
+                                    style="background:#fff7ed;color:#92400e;border:0.5px solid #fde68a;padding:5px 10px;font-size:12px;">
+                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> WIP Cor
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a href="#"
+                        class="d-flex align-items-center gap-3 px-2 py-2 rounded-2 text-dark text-decoration-none"
+                        style="font-size:14px;"><i class="bi bi-activity text-muted" style="width:20px;"></i>
+                        Monitoring <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:12px;"></i></a>
+                </li>
+                <li><a href="#"
+                        class="d-flex align-items-center gap-3 px-2 py-2 rounded-2 text-dark text-decoration-none"
+                        style="font-size:14px;"><i class="bi bi-file-bar-graph text-muted" style="width:20px;"></i>
+                        Laporan <i class="bi bi-chevron-right ms-auto text-muted" style="font-size:12px;"></i></a>
+                </li>
+                <li><a href="#"
+                        class="d-flex align-items-center gap-3 px-2 py-2 rounded-2 text-dark text-decoration-none"
+                        style="font-size:14px;"><i class="bi bi-pencil-square text-muted" style="width:20px;"></i>
+                        Pengajuan Revisi <i class="bi bi-chevron-right ms-auto text-muted"
+                            style="font-size:12px;"></i></a></li>
+                <li><a href="#"
+                        class="d-flex align-items-center gap-3 px-2 py-2 rounded-2 text-dark text-decoration-none"
+                        style="font-size:14px;"><i class="bi bi-gear text-muted" style="width:20px;"></i> Settings <i
+                            class="bi bi-chevron-right ms-auto text-muted" style="font-size:12px;"></i></a></li>
+            </ul>
+
+            <hr class="mx-2 my-1">
+
+            {{-- USER MOBILE --}}
+            <div class="d-flex align-items-center gap-3 px-2 py-3">
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-semibold flex-shrink-0"
+                    style="width:36px;height:36px;font-size:12px;">AC</div>
+                <div class="lh-sm flex-grow-1">
+                    <div class="fw-semibold text-dark" style="font-size:13px;">Admin BST</div>
+                    <small class="text-muted">Administrator</small>
+                </div>
+                <i class="bi bi-box-arrow-right text-muted fs-5"></i>
             </div>
 
         </div>

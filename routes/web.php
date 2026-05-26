@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PreProcessTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +16,4 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::get('/', [DashboardController::class, 'index']);
-
-
+Route::get('/PreProcessTransaction', [PreProcessTransactionController::class, 'index']);

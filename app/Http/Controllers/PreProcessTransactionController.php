@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class PreProcessTransactionController extends Controller
 {
     public function index()
     {
-        return view('Dashboard.index');
+
+        return view('PreProcessTransaction.index');
     }
 }

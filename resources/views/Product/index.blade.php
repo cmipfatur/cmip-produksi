@@ -29,12 +29,12 @@
                 <table id="tableProduk" class="table table-hover align-middle" style="width:100%; font-size: 13px;">
                     <thead class="table-light">
                         <tr>
-                            <th width="5%" class="text-center">No</th>
+                            <th width="5%" class="text-center">Nomer</th>
                             <th width="15%">Nama Produk</th>
-                            <th width="20%">File Name</th>
-                            <th width="10%">Type</th>
+                            <th width="20%">Nama File</th>
+                            <th width="10%">Tipe</th>
                             <th width="25%">Keterangan</th>
-                            <th width="15%">Tgl Dibuat</th>
+                            <th width="15%">Tanggal Dibuat</th>
                             <th width="10%" class="text-center">Aksi</th>
                         </tr>
                     </thead>

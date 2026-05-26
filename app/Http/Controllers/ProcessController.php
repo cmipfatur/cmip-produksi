@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProsesController extends Controller
+class ProcessController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +13,7 @@ class ProsesController extends Controller
      */
     public function index()
     {
-        //
+        return view('Process.index');
     }
 
     /**
@@ -23,7 +23,7 @@ class ProsesController extends Controller
      */
     public function create()
     {
-        //
+        return view('Process.create');
     }
 
     /**

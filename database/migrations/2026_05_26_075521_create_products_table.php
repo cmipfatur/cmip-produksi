@@ -26,7 +26,7 @@ class CreateProductsTable extends Migration
             $table->string('type', 100)->nullable();
 
             // 7. keterangan (text, boleh kosong/NULL)
-            $table->text('keterangan')->nullable();
+            $table->text('information')->nullable();
 
             // 4 & 5. created_at & updated_at (Otomatis dibuat oleh Laravel)
             $table->timestamps();

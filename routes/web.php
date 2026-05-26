@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,21 @@ use App\Http\Controllers\ProductController;
 Route::get('/', [DashboardController::class, 'index']);
 
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {
+
+    // Halaman Data Tabel Produk (URL: /product | Name: product.index)
+    Route::get('/', 'index')->name('index');
+
+    // Halaman Form Tambah Product (URL: /product/tambah | Name: product.create)
+    Route::get('/create', 'create')->name('create');
+
+    Route::get('/{id}', 'show')->name('show');
+
+    // Proses Simpan Data (URL: /product/simpan | Name: product.store)
+    Route::post('/store', 'store')->name('store');
+
+});
+
+Route::controller(ProcessController::class)->prefix('process')->name('process.')->group(function () {
 
     // Halaman Data Tabel Produk (URL: /product | Name: product.index)
     Route::get('/', 'index')->name('index');

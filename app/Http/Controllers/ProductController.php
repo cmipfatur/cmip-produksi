@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -93,7 +94,7 @@ class ProductController extends Controller
     public function show($id)
     {
         // Mengambil data produk berdasarkan ID menggunakan Query Builder
-        $product = \DB::table('products')->where('id', $id)->first();
+        $product = DB::table('products')->where('id', $id)->first();
 
         // Jika produk tidak ditemukan, kembalikan ke halaman utama dengan error
         if (!$product) {

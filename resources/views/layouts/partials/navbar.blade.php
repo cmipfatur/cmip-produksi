@@ -17,9 +17,10 @@
                 class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle border border-white"
                 style="width:8px;height:8px;"></span>
         </button>
-        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse"
-            data-bs-target="#mainNavbar" aria-expanded="false">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0 p-2 shadow-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar">
+
+            <i class="bi bi-list fs-3 text-dark"></i>
         </button>
     </div>
 

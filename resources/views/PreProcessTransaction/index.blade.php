@@ -504,6 +504,61 @@
         {{-- ── Desktop DataTable ── --}}
         <div class="table-card desktop-table">
             <div class="card-body p-4">
+
+                <form method="GET" action="{{ route('PreProcessTransaction.index') }}" class="mb-3">
+
+                    <div class="row g-2 align-items-end">
+
+                        <div class="col-5">
+
+                            <label class="form-label fw-semibold small mb-1">
+                                Dari Tanggal
+                            </label>
+
+                            <input type="date" name="date_from" class="form-control form-control-sm"
+                                value="{{ request('date_from') }}">
+
+                        </div>
+
+                        <div class="col-5">
+
+                            <label class="form-label fw-semibold small mb-1">
+                                Sampai Tanggal
+                            </label>
+
+                            <input type="date" name="date_to" class="form-control form-control-sm"
+                                value="{{ request('date_to') }}">
+
+                        </div>
+
+                        <div class="col">
+
+                            <button type="submit"
+                                class="btn btn-warning btn-sm fw-bold w-100 d-flex align-items-center justify-content-center gap-1">
+
+                                <i class="bi bi-funnel"></i>
+                                Filter
+
+                            </button>
+
+                        </div>
+
+                        <div class="col">
+
+                            <a href="{{ route('PreProcessTransaction.index') }}"
+                                class="btn btn-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Reset
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
                 <div class="table-responsive">
                     <table id="tablePreProcess" class="table table-hover align-middle" style="width:100%;font-size:13px;">
                         <thead class="table-light">

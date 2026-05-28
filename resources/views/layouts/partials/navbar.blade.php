@@ -42,7 +42,7 @@
                         <div class="col border-end pe-3">
                             <p class="text-uppercase text-muted fw-bold mb-2 pb-1 border-bottom"
                                 style="font-size:10px;letter-spacing:.06em;">Umum</p>
-                            <a href=".../Transaksi_PreProses/index_Transaksi_PreProses"
+                            <a href="{{ route('PreProcessTransaction.index') }}"
                                 class="dropdown-item rounded-2 d-flex align-items-center gap-2 py-1"
                                 style="font-size:12px;">
                                 <i class="bi bi-list-ul text-muted"></i> Pre Proses

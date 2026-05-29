@@ -12,16 +12,10 @@ class PreProcessTransactionModel extends Model
 
     public function getData($date_from, $date_to)
     {
-        $query = DB::table('ppic_preproses')
-            ->orderBy('NO_ID', 'DESC');
+        $query = DB::table('ppic_preproses')->orderBy('NO_ID', 'DESC');
 
-        if ($date_from) {
-            $query->where('TGL_PREPROSES', '>=', $date_from);
-        }
-
-        if ($date_to) {
-            $query->where('TGL_PREPROSES', '<=', $date_to);
-        }
+        if ($date_from) $query->where('TGL_PREPROSES', '>=', $date_from);
+        if ($date_to)   $query->where('TGL_PREPROSES', '<=', $date_to);
 
         return $query->get();
     }

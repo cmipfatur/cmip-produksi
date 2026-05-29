@@ -25,4 +25,5 @@ Route::controller(PreProcessTransactionController::class)->prefix('PreProcessTra
     Route::get('/{id}', 'show')->name('show');
     // Proses Simpan Data (URL: /product/simpan | Name: product.store)
     Route::post('/store', 'store')->name('store');
+    Route::get('/list/all', 'getListPreProcessTransaction')->name('list');
 });

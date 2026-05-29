@@ -5,7 +5,6 @@
     <link href="https://npmcdn.com/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 
     <style>
-        /* ── Page ─────────────────────────────────────────────── */
         .page-header-row {
             display: flex;
             align-items: center;
@@ -26,7 +25,7 @@
             display: none;
         }
 
-        /* ── Modal Parent ─────────────────────────────────────── */
+        /* ── Modal ── */
         .modal-head-warning {
             background: #E8A020;
             padding: 12px 18px;
@@ -61,7 +60,7 @@
             background: rgba(255, 255, 255, .45);
         }
 
-        /* ── Form dalam modal ─────────────────────────────────── */
+        /* ── Form Modal ── */
         .lbl {
             font-size: 11px;
             font-weight: 700;
@@ -106,14 +105,14 @@
             margin: 14px 0 10px;
         }
 
-        /* ── Detail table ─────────────────────────────────────── */
+        /* ── Detail Table ── */
         .detail-table th {
             font-size: 10px;
             color: #444;
             text-align: center;
             background: #f5f5f3;
             white-space: nowrap;
-            padding: 4px 4px !important;
+            padding: 4px !important;
         }
 
         .detail-table td {
@@ -142,7 +141,7 @@
             background: #f5f5f3;
         }
 
-        /* ── Summary boxes ────────────────────────────────────── */
+        /* ── Summary ── */
         .sum-box {
             background: #f5f5f3;
             border-radius: 8px;
@@ -176,7 +175,7 @@
             color: #aaa;
         }
 
-        /* ── Sub-overlay (child dari modal, bukan Bootstrap modal baru) ── */
+        /* ── Sub-overlay ── */
         .sub-overlay {
             display: none;
             position: absolute;
@@ -264,7 +263,7 @@
             margin-top: 1px;
         }
 
-        /* ── Responsive Mobile ────────────────────────────────── */
+        /* ── Mobile ── */
         @media (max-width: 767.98px) {
             .desktop-table {
                 display: none !important;
@@ -457,13 +456,12 @@
                 background: #FCEBEB;
             }
 
-            /* Modal full screen on mobile */
-            #modalTambahPreProses .modal-dialog {
+            #modal-add-pre-process .modal-dialog {
                 margin: 0;
                 max-width: 100%;
             }
 
-            #modalTambahPreProses .modal-content {
+            #modal-add-pre-process .modal-content {
                 border-radius: 0;
                 min-height: 100vh;
             }
@@ -485,7 +483,8 @@
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1" style="font-size:12px;">
-                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Transaksi</a>
+                        <li class="breadcrumb-item">
+                            <a href="#" class="text-decoration-none text-muted">Transaksi</a>
                         </li>
                         <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">Pre Proses</li>
                     </ol>
@@ -494,93 +493,69 @@
             </div>
             <button type="button"
                 class="btn btn-warning fw-bold text-dark btn-sm px-3 shadow-sm rounded-3 d-flex align-items-center gap-1"
-                data-bs-toggle="modal" data-bs-target="#modalTambahPreProses" style="white-space:nowrap;">
+                data-bs-toggle="modal" data-bs-target="#modal-add-pre-process" style="white-space:nowrap;">
                 <i class="bi bi-plus-lg"></i>
                 <span class="d-none d-sm-inline">Tambah Pre Proses</span>
                 <span class="d-inline d-sm-none">Tambah</span>
             </button>
         </div>
 
-        {{-- ── Desktop DataTable ── --}}
+        {{-- ── Alert ── --}}
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        {{-- ── Desktop Table ── --}}
         <div class="table-card desktop-table">
             <div class="card-body p-4">
+
                 <form method="GET" action="{{ route('PreProcessTransaction.index') }}" class="mb-3">
                     <div class="row g-2 align-items-end">
                         <div class="col-5">
-                            <label class="form-label fw-semibold small mb-1">
-                                Dari Tanggal
-                            </label>
+                            <label class="form-label fw-semibold small mb-1">Dari Tanggal</label>
                             <input type="date" name="date_from" class="form-control form-control-sm"
                                 value="{{ request('date_from') }}">
                         </div>
-
                         <div class="col-5">
-
-                            <label class="form-label fw-semibold small mb-1">
-                                Sampai Tanggal
-                            </label>
-
+                            <label class="form-label fw-semibold small mb-1">Sampai Tanggal</label>
                             <input type="date" name="date_to" class="form-control form-control-sm"
                                 value="{{ request('date_to') }}">
-
                         </div>
-
                         <div class="col">
-
                             <button type="submit"
                                 class="btn btn-warning btn-sm fw-bold w-100 d-flex align-items-center justify-content-center gap-1">
-
-                                <i class="bi bi-funnel"></i>
-                                Filter
-
+                                <i class="bi bi-funnel"></i> Filter
                             </button>
-
                         </div>
-
                         <div class="col">
-
                             <a href="{{ route('PreProcessTransaction.index') }}"
                                 class="btn btn-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
-                                <i class="bi bi-arrow-clockwise"></i>
-                                Reset
+                                <i class="bi bi-arrow-clockwise"></i> Reset
                             </a>
-
                         </div>
-
                     </div>
-
                 </form>
 
                 @if (count($data) == 0)
                     @if (empty($date_from) && empty($date_to))
                         <div class="alert alert-info border shadow-sm">
-                            <h6 class="mb-1">
-                                <i class="bi bi-calendar-range"></i>
-                                Belum Ada Filter Tanggal
-                            </h6>
-
-                            <p class="mb-0">
-                                Silakan pilih <strong>Dari Tanggal</strong> dan
-                                <strong>Sampai Tanggal</strong> pada form filter untuk
-                                menampilkan data.
-                            </p>
+                            <h6 class="mb-1"><i class="bi bi-calendar-range"></i> Belum Ada Filter Tanggal</h6>
+                            <p class="mb-0">Silakan pilih <strong>Dari Tanggal</strong> dan <strong>Sampai
+                                    Tanggal</strong> untuk menampilkan data.</p>
                         </div>
                     @else
                         <div class="alert alert-warning border shadow-sm">
-                            <h6 class="mb-1">
-                                <i class="bi bi-inbox"></i>
-                                Data Tidak Ditemukan
-                            </h6>
-
-                            <p class="mb-0">
-                                Tidak ada transaksi Pre Proses pada rentang tanggal yang dipilih.
-                            </p>
+                            <h6 class="mb-1"><i class="bi bi-inbox"></i> Data Tidak Ditemukan</h6>
+                            <p class="mb-0">Tidak ada transaksi Pre Proses pada rentang tanggal yang dipilih.</p>
                         </div>
                     @endif
                 @endif
 
                 <div class="table-responsive">
-                    <table id="tablePreProcess" class="table table-hover align-middle" style="width:100%;font-size:13px;">
+                    <table id="table-pre-process" class="table table-hover align-middle" style="width:100%;font-size:13px;">
                         <thead class="table-light">
                             <tr>
                                 <th class="text-center">No</th>
@@ -592,58 +567,37 @@
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
-
                         <tbody>
-
-                            @foreach ($data as $index => $pp)
+                            @foreach ($data as $index => $item)
                                 <tr>
                                     <td class="text-center">{{ $index + 1 }}.</td>
-
+                                    <td class="fw-semibold text-dark">{{ $item->BUKTI_PREPROSES }}</td>
                                     <td class="fw-semibold text-dark">
-                                        {{ $pp->BUKTI_PREPROSES }}
-                                    </td>
-
-                                    <td class="fw-semibold text-dark">
-                                        {{ \Carbon\Carbon::parse($pp->TGL_PREPROSES)->format('d-m-Y') }}
-                                    </td>
-
-                                    <td class="fw-semibold text-dark">
-                                        {{ $pp->BUKTI_PREPROSES_LAMA ?: '—' }}
-                                    </td>
-
-                                    <td class="fw-semibold text-dark">
-                                        {{ $pp->NOTES ?: '—' }}
-                                    </td>
-
-                                    <td class="fw-semibold text-dark">
-                                        {{ $pp->PER }}
-                                    </td>
-
+                                        {{ \Carbon\Carbon::parse($item->TGL_PREPROSES)->format('d-m-Y') }}</td>
+                                    <td class="fw-semibold text-dark">{{ $item->BUKTI_PREPROSES_LAMA ?: '—' }}</td>
+                                    <td class="fw-semibold text-dark">{{ $item->NOTES ?: '—' }}</td>
+                                    <td class="fw-semibold text-dark">{{ $item->PER }}</td>
                                     <td class="text-center">
                                         <div class="btn-group shadow-sm">
-
-                                            <a href="" class="btn btn-sm btn-light text-dark border" title="Print">
+                                            <a href="#" class="btn btn-sm btn-light text-dark border" title="Print">
                                                 <i class="bi bi-printer"></i>
                                             </a>
-
-                                            <a href="" class="btn btn-sm btn-light text-primary border"
+                                            <a href="#" class="btn btn-sm btn-light text-primary border"
                                                 title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-
                                             <button type="button" class="btn btn-sm btn-light text-danger border"
-                                                title="Hapus" onclick="confirmDelete({{ $pp->NO_ID }})">
+                                                title="Hapus" onclick="confirmDelete({{ $item->NO_ID }})">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
 
@@ -652,253 +606,115 @@
             <div class="mobile-search-bar">
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" id="mobileSearch" class="form-control" placeholder="Cari bukti, periode…">
+                    <input type="text" id="input-mobile-search" class="form-control" placeholder="Cari bukti, periode…">
                 </div>
                 <button class="btn-filter" title="Filter"><i class="bi bi-sliders2"></i></button>
             </div>
             <div class="mobile-stats">
                 <div class="mobile-stat">
                     <div class="stat-label">Total Data</div>
-                    <div class="stat-value">5</div>
+                    <div class="stat-value">{{ count($data) }}</div>
                     <div class="stat-sub">Pre proses</div>
                 </div>
                 <div class="mobile-stat">
                     <div class="stat-label">Periode Aktif</div>
-                    <div class="stat-value">03/2026</div>
+                    <div class="stat-value">{{ count($data) > 0 ? $data[0]->PER : '—' }}</div>
                     <div class="stat-sub">Berjalan</div>
                 </div>
             </div>
             <div class="mobile-section-label">Daftar Pre Proses</div>
-            <div id="mobileCards">
-
-                <div class="preproses-card" data-search="rk99/01/2026 01/2026">
-                    <div class="card-top">
-                        <div>
-                            <div class="card-no">#1</div>
-                            <div class="card-id">RK99/01/2026</div>
+            <div id="mobile-card-list">
+                @foreach ($data as $index => $item)
+                    <div class="preproses-card"
+                        data-search="{{ strtolower($item->BUKTI_PREPROSES . ' ' . $item->PER . ' ' . $item->NOTES) }}">
+                        <div class="card-top">
+                            <div>
+                                <div class="card-no">#{{ $index + 1 }}</div>
+                                <div class="card-id">{{ $item->BUKTI_PREPROSES }}</div>
+                            </div>
+                            <span class="status-badge">Aktif</span>
                         </div>
-                        <span class="status-badge">Aktif</span>
-                    </div>
-                    <div class="card-meta-grid">
-                        <div>
-                            <div class="meta-key">Tanggal Pre Proses</div>
-                            <div class="meta-val">14-01-2026</div>
+                        <div class="card-meta-grid">
+                            <div>
+                                <div class="meta-key">Tanggal Pre Proses</div>
+                                <div class="meta-val">{{ \Carbon\Carbon::parse($item->TGL_PREPROSES)->format('d-m-Y') }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="meta-key">Periode</div>
+                                <div class="meta-val">{{ $item->PER }}</div>
+                            </div>
+                            <div>
+                                <div class="meta-key">Bukti Lama</div>
+                                <div class="meta-val {{ $item->BUKTI_PREPROSES_LAMA ? '' : 'empty' }}">
+                                    {{ $item->BUKTI_PREPROSES_LAMA ?: '—' }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="meta-key">Notes</div>
+                                <div class="meta-val {{ $item->NOTES ? '' : 'empty' }}">
+                                    {{ $item->NOTES ?: '—' }}
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="meta-key">Periode</div>
-                            <div class="meta-val">01/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Bukti Lama</div>
-                            <div class="meta-val empty">—</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Notes</div>
-                            <div class="meta-val empty">—</div>
-                        </div>
-                    </div>
-                    <hr class="card-divider">
-                    <div class="card-actions">
-                        <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
-                        <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <button class="card-action-btn btn-del" onclick="confirmDelete(1)"><i class="bi bi-trash"></i>
-                            Hapus</button>
-                    </div>
-                </div>
-
-                <div class="preproses-card" data-search="rk99/02/2026 01/2026 revisi bahan baku">
-                    <div class="card-top">
-                        <div>
-                            <div class="card-no">#2</div>
-                            <div class="card-id">RK99/02/2026</div>
-                        </div>
-                        <span class="status-badge">Aktif</span>
-                    </div>
-                    <div class="card-meta-grid">
-                        <div>
-                            <div class="meta-key">Tanggal Pre Proses</div>
-                            <div class="meta-val">20-01-2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Periode</div>
-                            <div class="meta-val">01/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Bukti Lama</div>
-                            <div class="meta-val">RK88/01/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Notes</div>
-                            <div class="meta-val">Revisi bahan baku</div>
+                        <hr class="card-divider">
+                        <div class="card-actions">
+                            <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
+                            <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i>
+                                Edit</a>
+                            <button class="card-action-btn btn-del" onclick="confirmDelete({{ $item->NO_ID }})">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
                         </div>
                     </div>
-                    <hr class="card-divider">
-                    <div class="card-actions">
-                        <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
-                        <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <button class="card-action-btn btn-del" onclick="confirmDelete(2)"><i class="bi bi-trash"></i>
-                            Hapus</button>
-                    </div>
-                </div>
-
-                <div class="preproses-card" data-search="rk99/03/2026 02/2026 proses tambahan">
-                    <div class="card-top">
-                        <div>
-                            <div class="card-no">#3</div>
-                            <div class="card-id">RK99/03/2026</div>
-                        </div>
-                        <span class="status-badge">Aktif</span>
-                    </div>
-                    <div class="card-meta-grid">
-                        <div>
-                            <div class="meta-key">Tanggal Pre Proses</div>
-                            <div class="meta-val">05-02-2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Periode</div>
-                            <div class="meta-val">02/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Bukti Lama</div>
-                            <div class="meta-val empty">—</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Notes</div>
-                            <div class="meta-val">Proses tambahan</div>
-                        </div>
-                    </div>
-                    <hr class="card-divider">
-                    <div class="card-actions">
-                        <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
-                        <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <button class="card-action-btn btn-del" onclick="confirmDelete(3)"><i class="bi bi-trash"></i>
-                            Hapus</button>
-                    </div>
-                </div>
-
-                <div class="preproses-card" data-search="rk99/04/2026 02/2026">
-                    <div class="card-top">
-                        <div>
-                            <div class="card-no">#4</div>
-                            <div class="card-id">RK99/04/2026</div>
-                        </div>
-                        <span class="status-badge">Aktif</span>
-                    </div>
-                    <div class="card-meta-grid">
-                        <div>
-                            <div class="meta-key">Tanggal Pre Proses</div>
-                            <div class="meta-val">18-02-2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Periode</div>
-                            <div class="meta-val">02/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Bukti Lama</div>
-                            <div class="meta-val">RK88/02/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Notes</div>
-                            <div class="meta-val empty">—</div>
-                        </div>
-                    </div>
-                    <hr class="card-divider">
-                    <div class="card-actions">
-                        <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
-                        <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <button class="card-action-btn btn-del" onclick="confirmDelete(4)"><i class="bi bi-trash"></i>
-                            Hapus</button>
-                    </div>
-                </div>
-
-                <div class="preproses-card" data-search="rk99/05/2026 03/2026">
-                    <div class="card-top">
-                        <div>
-                            <div class="card-no">#5</div>
-                            <div class="card-id">RK99/05/2026</div>
-                        </div>
-                        <span class="status-badge">Aktif</span>
-                    </div>
-                    <div class="card-meta-grid">
-                        <div>
-                            <div class="meta-key">Tanggal Pre Proses</div>
-                            <div class="meta-val">03-03-2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Periode</div>
-                            <div class="meta-val">03/2026</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Bukti Lama</div>
-                            <div class="meta-val empty">—</div>
-                        </div>
-                        <div>
-                            <div class="meta-key">Notes</div>
-                            <div class="meta-val empty">—</div>
-                        </div>
-                    </div>
-                    <hr class="card-divider">
-                    <div class="card-actions">
-                        <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
-                        <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i> Edit</a>
-                        <button class="card-action-btn btn-del" onclick="confirmDelete(5)"><i class="bi bi-trash"></i>
-                            Hapus</button>
-                    </div>
-                </div>
-
-            </div>{{-- /mobileCards --}}
-        </div>{{-- /mobile-list --}}
+                @endforeach
+            </div>
+        </div>
 
     </div>{{-- /container-fluid --}}
 
 
-    {{-- ══════════════════════════════════════════════════════════
+    {{-- ══════════════════════════════════════════════════
      MODAL TAMBAH PRE PROSES
-     Sub-modal (Daftar PP & Tambah Bon) adalah CHILD ELEMENT
-     di dalam modal ini — bukan Bootstrap modal terpisah.
-     Menutup sub-modal TIDAK akan menutup parent ini.
-══════════════════════════════════════════════════════════ --}}
-    <div class="modal fade" id="modalTambahPreProses" tabindex="-1" aria-labelledby="modalTambahLabel"
-        aria-hidden="true">
+    ══════════════════════════════════════════════════ --}}
+    <div class="modal fade" id="modal-add-pre-process" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content" style="border-radius:12px; border:none; position:relative; overflow:visible;">
+            <div class="modal-content" style="border-radius:12px;border:none;position:relative;overflow:visible;">
 
-                {{-- Header --}}
                 <div class="modal-head-warning">
                     <span class="modal-title-text">
                         <i class="bi bi-plus-circle me-2"></i>Input Transaksi Pre Proses
                     </span>
-                    <button type="button" class="btn-close-white" data-bs-dismiss="modal" aria-label="Tutup">
+                    <button type="button" class="btn-close-white" data-bs-dismiss="modal">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
 
-                {{-- Body --}}
                 <div class="modal-body p-3 p-md-4" style="position:relative;">
-                    <form id="formPreProses" action="#" method="POST">
+                    <form id="form-pre-process" action="{{ route('PreProcessTransaction.store') }}" method="POST">
                         @csrf
 
-                        {{-- ── Section 1: Header Info ── --}}
+                        {{-- Section 1 --}}
                         <div class="sec-div">Informasi Pre Proses</div>
                         <div class="row g-2">
                             <div class="col-6 col-md-3">
                                 <label class="lbl">Bukti Pre Proses</label>
-                                <input type="text" id="BUKTI_PREPROSES" name="BUKTI_PREPROSES" class="inp"
+                                <input type="text" id="input-voucher-code" name="voucher_code" class="inp"
                                     placeholder="RK99/01/2026" required>
                             </div>
                             <div class="col-6 col-md-3">
                                 <label class="lbl">Tgl Pre Proses</label>
-                                <input type="text" id="TGL_PREPROSES" name="TGL_PREPROSES" class="inp fp-date"
+                                <input type="text" id="input-process-date" name="process_date" class="inp fp-date"
                                     placeholder="dd-mm-yyyy" value="{{ date('d-m-Y') }}" required>
                             </div>
                             <div class="col-6 col-md-3">
                                 <label class="lbl">Bukti Pre Proses Lama</label>
-                                <input type="text" id="BUKTI_PREPROSES_LAMA" name="BUKTI_PREPROSES_LAMA"
-                                    class="inp" readonly placeholder="—">
+                                <input type="text" id="input-old-voucher" name="old_voucher" class="inp" readonly
+                                    placeholder="—">
                             </div>
                             <div class="col-6 col-md-3">
                                 <label class="lbl">Periode</label>
-                                <select id="PER" name="PER" class="inp" style="height:32px;" required>
+                                <select id="input-period" name="period" class="inp" style="height:32px;" required>
                                     <option value="">-- Pilih --</option>
                                     @foreach (['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $m)
                                         <option value="{{ $m }}/2026">{{ $m }}/2026</option>
@@ -909,37 +725,36 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <label class="lbl">Admin</label>
-                                <input type="text" id="ADMIN" name="ADMIN" class="inp"
+                                <input type="text" id="input-admin" name="admin" class="inp"
                                     value="{{ auth()->user()->name ?? 'Admin' }}" readonly>
                             </div>
                             <div class="col-12 col-md-5">
                                 <label class="lbl">Notes</label>
-                                <input type="text" id="NOTES" name="NOTES" class="inp"
+                                <input type="text" id="input-notes" name="notes" class="inp"
                                     placeholder="Keterangan tambahan…">
                             </div>
-                            <div class="col-6 col-md-2 d-flex align-items-end gap-2">
-                                {{-- Tombol membuka SUB-OVERLAY (child), bukan modal Bootstrap --}}
+                            <div class="col-6 col-md-2 d-flex align-items-end">
                                 <button type="button" class="btn btn-info btn-sm fw-bold text-white w-100"
-                                    onclick="bukaSubOverlay('subDaftarPP')">
+                                    onclick="openSubOverlay('sub-list-pre-process')">
                                     <i class="bi bi-search me-1"></i>Daftar Pre Proses
                                 </button>
                             </div>
                         </div>
 
-                        {{-- ── Section 2: Detail Bon ── --}}
+                        {{-- Section 2 --}}
                         <div class="sec-div">Detail Bon Bahan</div>
                         <div class="d-flex gap-2 mb-2 flex-wrap">
                             <button type="button" class="btn btn-info btn-sm fw-bold text-white"
-                                onclick="bukaSubOverlay('subTambahBon')">
+                                onclick="openSubOverlay('sub-add-bon')">
                                 <i class="bi bi-plus-circle me-1"></i>Tambah Bon
                             </button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="tambahRow()">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addDetailRow()">
                                 <i class="bi bi-plus me-1"></i>Tambah Baris
                             </button>
                         </div>
 
                         <div class="table-responsive">
-                            <table id="detailTable" class="table table-bordered table-sm detail-table">
+                            <table id="detail-table" class="table table-bordered table-sm detail-table">
                                 <thead>
                                     <tr>
                                         <th style="width:36px">REC</th>
@@ -957,14 +772,14 @@
                                         <th style="width:34px"></th>
                                     </tr>
                                 </thead>
-                                <tbody id="detailBody">
+                                <tbody id="detail-body">
                                     <tr>
-                                        <td><input name="REC[]" type="text" value="1" class="fc REC" readonly>
-                                        </td>
-                                        <td><input name="BUKTI_PROSES[]" type="text" class="fc BUKTI_PROSES" readonly>
-                                        </td>
+                                        <td><input name="rec[]" type="text" value="1" class="fc fc-rec"
+                                                readonly></td>
+                                        <td><input name="process_voucher[]" type="text" class="fc fc-process-voucher"
+                                                readonly></td>
                                         <td>
-                                            <select name="PROSES_SELANJUTNYA[]" class="fc PROSES_SELANJUTNYA" required>
+                                            <select name="next_process[]" class="fc fc-next-process" required>
                                                 <option value="BOL">BOLA</option>
                                                 <option value="COR">COR</option>
                                                 <option value="GLN">GILING</option>
@@ -977,40 +792,40 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="PP_KARAT[]" class="fc" required>
+                                            <select name="karat[]" class="fc" required>
                                                 <option value="">— Karat —</option>
                                             </select>
                                         </td>
-                                        <td><input name="TGL_PROSES[]" type="text" class="fc fp-date TGL_PROSES"
+                                        <td><input name="process_date_detail[]" type="text" class="fc fp-date"
                                                 value="{{ date('d-m-Y') }}" required></td>
-                                        <td><input name="OPERATOR_A_PROSES[]" type="text" class="fc"></td>
-                                        <td><input name="OPERATOR_B_PROSES[]" type="text" class="fc"></td>
+                                        <td><input name="operator_a[]" type="text" class="fc"></td>
+                                        <td><input name="operator_b[]" type="text" class="fc"></td>
                                         <td>
-                                            <input name="QTYGRAM_A_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-primary fw-bold QTYGRAM_A"
-                                                oninput="hitungRow(this)">
-                                            <input name="QTYGRAM_B_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-primary fw-bold QTYGRAM_B mt-1"
-                                                oninput="hitungRow(this)">
-                                            <input name="QTYGRAM_C_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-primary fw-bold QTYGRAM_C mt-1"
-                                                oninput="hitungRow(this)">
+                                            <input name="gram_a[]" type="text" value="0"
+                                                class="fc text-end text-primary fw-bold fc-gram-a"
+                                                oninput="calcRow(this)">
+                                            <input name="gram_b[]" type="text" value="0"
+                                                class="fc text-end text-primary fw-bold fc-gram-b mt-1"
+                                                oninput="calcRow(this)">
+                                            <input name="gram_c[]" type="text" value="0"
+                                                class="fc text-end text-primary fw-bold fc-gram-c mt-1"
+                                                oninput="calcRow(this)">
                                         </td>
                                         <td>
-                                            <input name="QTYGRAM_D_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-primary fw-bold QTYGRAM_D"
-                                                oninput="hitungRow(this)">
-                                            <input name="QTYGRAM_E_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-primary fw-bold QTYGRAM_E mt-1"
-                                                oninput="hitungRow(this)">
-                                            <input name="QTYGRAM_F_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-primary fw-bold QTYGRAM_F mt-1"
-                                                oninput="hitungRow(this)">
+                                            <input name="gram_d[]" type="text" value="0"
+                                                class="fc text-end text-primary fw-bold fc-gram-d"
+                                                oninput="calcRow(this)">
+                                            <input name="gram_e[]" type="text" value="0"
+                                                class="fc text-end text-primary fw-bold fc-gram-e mt-1"
+                                                oninput="calcRow(this)">
+                                            <input name="gram_f[]" type="text" value="0"
+                                                class="fc text-end text-primary fw-bold fc-gram-f mt-1"
+                                                oninput="calcRow(this)">
                                         </td>
-                                        <td><input name="QTYGRAM_PROSES[]" type="text" value="0"
-                                                class="fc text-end text-success fw-bold QTYGRAM_TOTAL" readonly></td>
-                                        <td><input name="PR_NAMA[]" type="text" class="fc" required></td>
-                                        <td><input name="KET[]" type="text" class="fc"></td>
+                                        <td><input name="gram_total[]" type="text" value="0"
+                                                class="fc text-end text-success fw-bold fc-gram-total" readonly></td>
+                                        <td><input name="product_name[]" type="text" class="fc" required></td>
+                                        <td><input name="detail_notes[]" type="text" class="fc"></td>
                                         <td>
                                             <button type="button"
                                                 class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0">
@@ -1023,7 +838,7 @@
                                     <tr class="table-light">
                                         <td colspan="9" class="text-end fw-bold" style="font-size:10px;">Grand Total
                                             Berat (GR):</td>
-                                        <td><input type="text" id="GT_QTYGRAM_PROSES" name="GT_QTYGRAM_PROSES"
+                                        <td><input type="text" id="input-grand-total-gram" name="grand_total_gram"
                                                 class="fc text-end fw-bold text-success" value="0" readonly></td>
                                         <td colspan="3"></td>
                                     </tr>
@@ -1031,21 +846,21 @@
                             </table>
                         </div>
 
-                        {{-- ── Section 3: Summary ── --}}
+                        {{-- Section 3 --}}
                         <div class="sec-div">Ringkasan</div>
                         <div class="row g-2">
                             <div class="col-12 col-md-4">
                                 <div class="sum-box">
                                     <span class="sum-lbl">Bahan Awal Pre Proses</span>
-                                    <input type="text" id="GT_QTYGRAM_PROSESSEBELUMNYA"
-                                        name="GT_QTYGRAM_PROSESSEBELUMNYA" class="sum-val" value="0" readonly>
+                                    <input type="text" id="input-initial-weight" name="initial_weight"
+                                        class="sum-val" value="0" readonly>
                                     <small>GR</small>
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">
                                 <div class="sum-box">
                                     <span class="sum-lbl">Afkir Pre Proses</span>
-                                    <input type="text" id="GT_AFKIRQTYGRAMPREPROSES" name="GT_AFKIRQTYGRAMPREPROSES"
+                                    <input type="text" id="input-reject-weight" name="reject_weight"
                                         class="sum-val danger" value="0" readonly>
                                     <small>GR</small>
                                 </div>
@@ -1053,93 +868,54 @@
                             <div class="col-6 col-md-4">
                                 <div class="sum-box">
                                     <span class="sum-lbl">Susut Pre Proses</span>
-                                    <input type="text" id="GT_SUSUTQTYGRAMPREPROSES" name="GT_SUSUTQTYGRAMPREPROSES"
+                                    <input type="text" id="input-shrinkage-weight" name="shrinkage_weight"
                                         class="sum-val danger" value="0" readonly>
                                     <small>GR</small>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- ── Footer ── --}}
+                        {{-- Footer --}}
                         <div class="d-flex gap-2 justify-content-end mt-3 pt-3 border-top">
                             <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
                                 <i class="bi bi-x-lg me-1"></i>Batal
                             </button>
-                            <button type="submit" id="btnSave" class="btn btn-primary px-4 fw-bold">
+                            <button type="submit" id="btn-save" class="btn btn-primary px-4 fw-bold">
                                 <i class="bi bi-floppy me-1"></i>Simpan
                             </button>
                         </div>
 
                     </form>
 
-                    {{-- ════════════════════════════════════════════════
-                     SUB-OVERLAY A: DAFTAR PRE PROSES
-                     Ini adalah div biasa (child element), BUKAN
-                     Bootstrap modal. Menutup ini tidak akan
-                     menutup parent modal di atasnya.
-                ════════════════════════════════════════════════ --}}
-                    <div class="sub-overlay" id="subDaftarPP">
+                    {{-- ── Sub-overlay A: Daftar Pre Proses ── --}}
+                    <div class="sub-overlay" id="sub-list-pre-process">
                         <div class="sub-box">
                             <div class="sub-head">
                                 <h6><i class="bi bi-list-ul me-2"></i>Daftar Pre Proses</h6>
-                                <button type="button" class="btn-close-white" onclick="tutupSubOverlay('subDaftarPP')"
-                                    aria-label="Tutup" style="background:rgba(0,0,0,.15);color:#333;">
+                                <button type="button" onclick="closeSubOverlay('sub-list-pre-process')"
+                                    style="background:rgba(0,0,0,.15);border:none;color:#333;width:28px;height:28px;border-radius:50%;cursor:pointer;">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
                             </div>
                             <div class="sub-body">
-                                {{-- Dummy rows — ganti dengan @foreach ($daftarPP as $pp) --}}
-                                <div class="lookup-row" onclick="pilihDaftarPP('RK99/01/2026', '', '01/2026')">
-                                    <div>
-                                        <div class="lookup-id">RK99/01/2026</div>
-                                        <div class="lookup-sub">Lama: — &nbsp;|&nbsp; Periode: 01/2026</div>
+                                <input type="text" id="input-search-pre-process" class="inp mb-2"
+                                    placeholder="Cari bukti atau periode...">
+                                <div id="list-pre-process-rows">
+                                    <div class="text-center text-muted py-3" style="font-size:12px;">
+                                        <span class="spinner-border spinner-border-sm"></span> Memuat...
                                     </div>
-                                    <i class="bi bi-chevron-right text-warning"></i>
-                                </div>
-                                <div class="lookup-row"
-                                    onclick="pilihDaftarPP('RK99/02/2026', 'RK88/01/2026', '01/2026')">
-                                    <div>
-                                        <div class="lookup-id">RK99/02/2026</div>
-                                        <div class="lookup-sub">Lama: RK88/01/2026 &nbsp;|&nbsp; Periode: 01/2026</div>
-                                    </div>
-                                    <i class="bi bi-chevron-right text-warning"></i>
-                                </div>
-                                <div class="lookup-row" onclick="pilihDaftarPP('RK99/03/2026', '', '02/2026')">
-                                    <div>
-                                        <div class="lookup-id">RK99/03/2026</div>
-                                        <div class="lookup-sub">Lama: — &nbsp;|&nbsp; Periode: 02/2026</div>
-                                    </div>
-                                    <i class="bi bi-chevron-right text-warning"></i>
-                                </div>
-                                <div class="lookup-row"
-                                    onclick="pilihDaftarPP('RK99/04/2026', 'RK88/02/2026', '02/2026')">
-                                    <div>
-                                        <div class="lookup-id">RK99/04/2026</div>
-                                        <div class="lookup-sub">Lama: RK88/02/2026 &nbsp;|&nbsp; Periode: 02/2026</div>
-                                    </div>
-                                    <i class="bi bi-chevron-right text-warning"></i>
-                                </div>
-                                <div class="lookup-row" onclick="pilihDaftarPP('RK99/05/2026', '', '03/2026')">
-                                    <div>
-                                        <div class="lookup-id">RK99/05/2026</div>
-                                        <div class="lookup-sub">Lama: — &nbsp;|&nbsp; Periode: 03/2026</div>
-                                    </div>
-                                    <i class="bi bi-chevron-right text-warning"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- ════════════════════════════════════════════════
-                     SUB-OVERLAY B: TAMBAH BON
-                     Sama seperti sub-overlay A — child element biasa.
-                ════════════════════════════════════════════════ --}}
-                    <div class="sub-overlay" id="subTambahBon">
+                    {{-- ── Sub-overlay B: Tambah Bon ── --}}
+                    <div class="sub-overlay" id="sub-add-bon">
                         <div class="sub-box wide">
                             <div class="sub-head">
                                 <h6><i class="bi bi-box me-2"></i>Data Bon Bahan</h6>
-                                <button type="button" class="btn-close-white" onclick="tutupSubOverlay('subTambahBon')"
-                                    aria-label="Tutup" style="background:rgba(0,0,0,.15);color:#333;">
+                                <button type="button" onclick="closeSubOverlay('sub-add-bon')"
+                                    style="background:rgba(0,0,0,.15);border:none;color:#333;width:28px;height:28px;border-radius:50%;cursor:pointer;">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
                             </div>
@@ -1158,12 +934,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- Dummy rows — ganti dengan @foreach ($dataBon as $bon) --}}
+                                            {{-- ganti dengan @foreach ($dataBon as $bon) --}}
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary btn-sm py-0 select-bon"
-                                                        data-bukti="BB/001/2026" data-karat="375"
-                                                        data-nama="RANTAI POLOS" data-gram="150.500">
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-sm py-0 btn-select-bon"
+                                                        data-voucher="BB/001/2026" data-karat="375"
+                                                        data-product="RANTAI POLOS" data-gram="150.500">
                                                         BB/001/2026
                                                     </button>
                                                 </td>
@@ -1176,9 +953,10 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary btn-sm py-0 select-bon"
-                                                        data-bukti="BB/002/2026" data-karat="750"
-                                                        data-nama="RANTAI VARIASI" data-gram="200.000">
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-sm py-0 btn-select-bon"
+                                                        data-voucher="BB/002/2026" data-karat="750"
+                                                        data-product="RANTAI VARIASI" data-gram="200.000">
                                                         BB/002/2026
                                                     </button>
                                                 </td>
@@ -1191,9 +969,10 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary btn-sm py-0 select-bon"
-                                                        data-bukti="BB/003/2026" data-karat="375"
-                                                        data-nama="RANTAI LAPIS" data-gram="310.750">
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-sm py-0 btn-select-bon"
+                                                        data-voucher="BB/003/2026" data-karat="375"
+                                                        data-product="RANTAI LAPIS" data-gram="310.750">
                                                         BB/003/2026
                                                     </button>
                                                 </td>
@@ -1214,29 +993,25 @@
                 </div>{{-- /modal-body --}}
             </div>
         </div>
-    </div>{{-- /modalTambahPreProses --}}
-
+    </div>{{-- /modal-add-pre-process --}}
 
     {{-- Delete form --}}
-    <form id="deleteForm" method="POST" style="display:none;">
+    <form id="form-delete" method="POST" style="display:none;">
         @csrf
         @method('DELETE')
     </form>
 
-
-    {{-- ── Scripts ── --}}
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
 
     <script>
+        // ── DataTable ────────────────────────────────────────────
         $(document).ready(function() {
-            // DataTable index
-            $('#tablePreProcess').DataTable({
+            $('#table-pre-process').DataTable({
                 pageLength: 10,
                 ordering: true,
-                info: true,
                 autoWidth: false,
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
@@ -1244,7 +1019,7 @@
             });
         });
 
-        // ── Flatpickr — init semua elemen bertanda .fp-date ──────
+        // ── Flatpickr ────────────────────────────────────────────
         function initFlatpickr() {
             document.querySelectorAll('.fp-date:not([data-fp])').forEach(function(el) {
                 flatpickr(el, {
@@ -1256,151 +1031,224 @@
         }
         document.addEventListener('DOMContentLoaded', initFlatpickr);
 
-        // ── Sub-overlay open/close ───────────────────────────────
-        // Menggunakan div biasa sebagai sub-overlay (child element di dalam
-        // modal), bukan Bootstrap modal baru — sehingga parent modal
-        // tidak pernah terpengaruh saat sub-overlay dibuka/ditutup.
-        function bukaSubOverlay(id) {
+        // ── Sub-overlay ──────────────────────────────────────────
+        let preProcessListLoaded = false;
+        let preProcessListData = [];
+
+        function openSubOverlay(id) {
             document.getElementById(id).classList.add('active');
+            if (id === 'sub-list-pre-process' && !preProcessListLoaded) {
+                fetchPreProcessList();
+            }
         }
 
-        function tutupSubOverlay(id) {
+        function closeSubOverlay(id) {
             document.getElementById(id).classList.remove('active');
         }
 
-        // ── Picker: pilih dari Daftar Pre Proses ────────────────
-        function pilihDaftarPP(bukti, lama, per) {
-            document.getElementById('BUKTI_PREPROSES_LAMA').value = lama || '';
-            document.getElementById('PER').value = per || '';
-            tutupSubOverlay('subDaftarPP');
+        // ── Fetch list pre process ───────────────────────────────
+        function fetchPreProcessList() {
+            const dateFrom = $('[name="date_from"]').val();
+            const dateTo = $('[name="date_to"]').val();
+
+            $.get("{{ route('PreProcessTransaction.list') }}", {
+                date_from: dateFrom,
+                date_to: dateTo
+            }, function(response) {
+                preProcessListLoaded = true;
+                preProcessListData = response;
+                renderPreProcessList(response);
+            }).fail(function() {
+                $('#list-pre-process-rows').html(
+                    '<div class="text-center text-danger py-3" style="font-size:12px;">' +
+                    '<i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
+                );
+            });
         }
 
-        // ── Picker: pilih Bon Bahan ──────────────────────────────
-        $(document).on('click', '.select-bon', function() {
-            const bukti = $(this).data('bukti');
+        // ── Render list ──────────────────────────────────────────
+        function renderPreProcessList(data) {
+            if (!data.length) {
+                $('#list-pre-process-rows').html(
+                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>'
+                );
+                return;
+            }
+
+            const rows = data.map(item => {
+                const voucherCode = item.BUKTI_PREPROSES || '';
+                const oldVoucher = item.BUKTI_PREPROSES_LAMA || '';
+                const period = item.PER || '';
+
+                return `
+                <div class="lookup-row"
+                     onclick="selectPreProcess('${voucherCode}', '${oldVoucher}', '${period}')">
+                    <div>
+                        <div class="lookup-id">${voucherCode}</div>
+                        <div class="lookup-sub">
+                            Lama: ${oldVoucher || '—'} &nbsp;|&nbsp; Periode: ${period}
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right text-warning"></i>
+                </div>
+            `;
+            }).join('');
+
+            $('#list-pre-process-rows').html(rows);
+        }
+
+        // ── Search client-side ───────────────────────────────────
+        $(document).on('input', '#input-search-pre-process', function() {
+            const keyword = $(this).val().toLowerCase();
+            const filtered = preProcessListData.filter(item =>
+                (item.BUKTI_PREPROSES || '').toLowerCase().includes(keyword) ||
+                (item.PER || '').toLowerCase().includes(keyword)
+            );
+            renderPreProcessList(filtered);
+        });
+
+        // ── Select pre process → isi form ────────────────────────
+        function selectPreProcess(voucherCode, oldVoucher, period) {
+            $('#input-old-voucher').val(oldVoucher || '');
+            $('#input-period').val(period || '');
+            closeSubOverlay('sub-list-pre-process');
+        }
+
+        // ── Select bon → isi detail row ──────────────────────────
+        $(document).on('click', '.btn-select-bon', function() {
+            const voucher = $(this).data('voucher');
             const karat = $(this).data('karat');
-            const nama = $(this).data('nama');
+            const product = $(this).data('product');
             const gram = $(this).data('gram');
-            // Isi row pertama yang kosong, atau tambah baris baru
             let filled = false;
-            $('#detailBody tr').each(function() {
-                const bp = $(this).find('.BUKTI_PROSES');
-                if (bp.val() === '') {
-                    bp.val(bukti);
-                    $(this).find('.QTYGRAM_A').val(gram);
-                    $(this).find('[name="PR_NAMA[]"]').val(nama);
-                    hitungRow($(this).find('.QTYGRAM_A')[0]);
+
+            $('#detail-body tr').each(function() {
+                const pv = $(this).find('.fc-process-voucher');
+                if (pv.val() === '') {
+                    pv.val(voucher);
+                    $(this).find('.fc-gram-a').val(gram);
+                    $(this).find('[name="product_name[]"]').val(product);
+                    calcRow($(this).find('.fc-gram-a')[0]);
                     filled = true;
                     return false;
                 }
             });
-            if (!filled) tambahRow({
-                bukti,
+
+            if (!filled) addDetailRow({
+                voucher,
                 karat,
-                nama,
+                product,
                 gram
             });
-            tutupSubOverlay('subTambahBon');
+            closeSubOverlay('sub-add-bon');
         });
 
-        // ── Delete baris detail ──────────────────────────────────
+        // ── Delete detail row ────────────────────────────────────
         $(document).on('click', '.btn-delete-row', function() {
-            if ($('#detailBody tr').length <= 1) {
+            if ($('#detail-body tr').length <= 1) {
                 alert('Minimal harus ada 1 baris detail.');
                 return;
             }
             if (!confirm('Hapus baris ini?')) return;
             $(this).closest('tr').remove();
-            nomorBaris();
-            hitungGlobal();
+            reNumberRows();
+            calcGrandTotal();
         });
 
-        function nomorBaris() {
-            $('#detailBody tr').each(function(i) {
-                $(this).find('.REC').val(i + 1);
+        function reNumberRows() {
+            $('#detail-body tr').each(function(i) {
+                $(this).find('.fc-rec').val(i + 1);
             });
         }
 
-        // ── Tambah baris detail ──────────────────────────────────
-        let idrow = 1;
+        // ── Add detail row ───────────────────────────────────────
+        let rowCount = 1;
 
-        function tambahRow(data = {}) {
-            idrow++;
+        function addDetailRow(data = {}) {
+            rowCount++;
             const today = "{{ date('d-m-Y') }}";
             const opts = `
-        <option value="BOL">BOLA</option><option value="COR">COR</option>
-        <option value="GLN">GILING</option><option value="HLL">HOLLOW</option>
-        <option value="PPL">PATRI PLAT</option><option value="PIP">PIPA</option>
-        <option value="STM">STAMPING</option><option value="TRK">TARIK</option>
-        <option value="SRT">SORTIR</option>`;
+            <option value="BOL">BOLA</option>
+            <option value="COR">COR</option>
+            <option value="GLN">GILING</option>
+            <option value="HLL">HOLLOW</option>
+            <option value="PPL">PATRI PLAT</option>
+            <option value="PIP">PIPA</option>
+            <option value="STM">STAMPING</option>
+            <option value="TRK">TARIK</option>
+            <option value="SRT">SORTIR</option>`;
+
             const row = `<tr>
-        <td><input name="REC[]" type="text" value="${idrow}" class="fc REC" readonly></td>
-        <td><input name="BUKTI_PROSES[]" type="text" value="${data.bukti||''}" class="fc BUKTI_PROSES" readonly></td>
-        <td><select name="PROSES_SELANJUTNYA[]" class="fc PROSES_SELANJUTNYA" required>${opts}</select></td>
-        <td><select name="PP_KARAT[]" class="fc" required>
-            <option value="${data.karat||''}" selected>${data.karat||'— Karat —'}</option>
-        </select></td>
-        <td><input name="TGL_PROSES[]" type="text" class="fc fp-date TGL_PROSES" value="${today}" required></td>
-        <td><input name="OPERATOR_A_PROSES[]" type="text" class="fc"></td>
-        <td><input name="OPERATOR_B_PROSES[]" type="text" class="fc"></td>
-        <td>
-            <input name="QTYGRAM_A_PROSES[]" type="text" value="${data.gram||'0'}" class="fc text-end text-primary fw-bold QTYGRAM_A" oninput="hitungRow(this)">
-            <input name="QTYGRAM_B_PROSES[]" type="text" value="0" class="fc text-end text-primary fw-bold QTYGRAM_B mt-1" oninput="hitungRow(this)">
-            <input name="QTYGRAM_C_PROSES[]" type="text" value="0" class="fc text-end text-primary fw-bold QTYGRAM_C mt-1" oninput="hitungRow(this)">
-        </td>
-        <td>
-            <input name="QTYGRAM_D_PROSES[]" type="text" value="0" class="fc text-end text-primary fw-bold QTYGRAM_D" oninput="hitungRow(this)">
-            <input name="QTYGRAM_E_PROSES[]" type="text" value="0" class="fc text-end text-primary fw-bold QTYGRAM_E mt-1" oninput="hitungRow(this)">
-            <input name="QTYGRAM_F_PROSES[]" type="text" value="0" class="fc text-end text-primary fw-bold QTYGRAM_F mt-1" oninput="hitungRow(this)">
-        </td>
-        <td><input name="QTYGRAM_PROSES[]" type="text" value="0" class="fc text-end text-success fw-bold QTYGRAM_TOTAL" readonly></td>
-        <td><input name="PR_NAMA[]" type="text" value="${data.nama||''}" class="fc" required></td>
-        <td><input name="KET[]" type="text" class="fc"></td>
-        <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0"><i class="bi bi-trash"></i></button></td>
-    </tr>`;
-            $('#detailBody').append(row);
+            <td><input name="rec[]" type="text" value="${rowCount}" class="fc fc-rec" readonly></td>
+            <td><input name="process_voucher[]" type="text" value="${data.voucher || ''}" class="fc fc-process-voucher" readonly></td>
+            <td><select name="next_process[]" class="fc fc-next-process" required>${opts}</select></td>
+            <td><select name="karat[]" class="fc" required>
+                <option value="${data.karat || ''}" selected>${data.karat || '— Karat —'}</option>
+            </select></td>
+            <td><input name="process_date_detail[]" type="text" class="fc fp-date" value="${today}" required></td>
+            <td><input name="operator_a[]" type="text" class="fc"></td>
+            <td><input name="operator_b[]" type="text" class="fc"></td>
+            <td>
+                <input name="gram_a[]" type="text" value="${data.gram || '0'}" class="fc text-end text-primary fw-bold fc-gram-a" oninput="calcRow(this)">
+                <input name="gram_b[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-b mt-1" oninput="calcRow(this)">
+                <input name="gram_c[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-c mt-1" oninput="calcRow(this)">
+            </td>
+            <td>
+                <input name="gram_d[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-d" oninput="calcRow(this)">
+                <input name="gram_e[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-e mt-1" oninput="calcRow(this)">
+                <input name="gram_f[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-f mt-1" oninput="calcRow(this)">
+            </td>
+            <td><input name="gram_total[]" type="text" value="0" class="fc text-end text-success fw-bold fc-gram-total" readonly></td>
+            <td><input name="product_name[]" type="text" value="${data.product || ''}" class="fc" required></td>
+            <td><input name="detail_notes[]" type="text" class="fc"></td>
+            <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0">
+                <i class="bi bi-trash"></i>
+            </button></td>
+        </tr>`;
+
+            $('#detail-body').append(row);
             initFlatpickr();
-            nomorBaris();
+            reNumberRows();
         }
 
-        // ── Hitung berat per baris ───────────────────────────────
-        function hitungRow(el) {
+        // ── Calc row total ───────────────────────────────────────
+        function calcRow(el) {
             const row = $(el).closest('tr');
             let total = 0;
-            row.find('.QTYGRAM_A,.QTYGRAM_B,.QTYGRAM_C,.QTYGRAM_D,.QTYGRAM_E,.QTYGRAM_F').each(function() {
+            row.find('.fc-gram-a,.fc-gram-b,.fc-gram-c,.fc-gram-d,.fc-gram-e,.fc-gram-f').each(function() {
                 total += parseFloat($(this).val().replace(/,/g, '')) || 0;
             });
-            row.find('.QTYGRAM_TOTAL').val(total.toFixed(3));
-            hitungGlobal();
+            row.find('.fc-gram-total').val(total.toFixed(3));
+            calcGrandTotal();
         }
 
-        // ── Hitung grand total ───────────────────────────────────
-        function hitungGlobal() {
+        // ── Calc grand total ─────────────────────────────────────
+        function calcGrandTotal() {
             let gt = 0;
-            $('.QTYGRAM_TOTAL').each(function() {
+            $('.fc-gram-total').each(function() {
                 gt += parseFloat($(this).val()) || 0;
             });
-            $('#GT_QTYGRAM_PROSES').val(gt.toFixed(3));
+            $('#input-grand-total-gram').val(gt.toFixed(3));
         }
 
-        // ── Save loading state ───────────────────────────────────
-        $('#formPreProses').on('submit', function() {
-            $('#btnSave').html('<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...').prop(
+        // ── Submit loading ───────────────────────────────────────
+        $('#form-pre-process').on('submit', function() {
+            $('#btn-save').html('<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...').prop(
                 'disabled', true);
         });
 
         // ── Delete record ────────────────────────────────────────
         function confirmDelete(id) {
             if (!confirm('Yakin ingin menghapus data ini?')) return;
-            const form = document.getElementById('deleteForm');
-            form.action = `/pre-proses/${id}`;
+            const form = document.getElementById('form-delete');
+            form.action = "{{ url('PreProcessTransaction') }}/" + id;
             form.submit();
         }
 
         // ── Mobile search ────────────────────────────────────────
-        document.getElementById('mobileSearch')?.addEventListener('input', function() {
+        document.getElementById('input-mobile-search')?.addEventListener('input', function() {
             const q = this.value.toLowerCase();
-            document.querySelectorAll('#mobileCards .preproses-card').forEach(function(card) {
+            document.querySelectorAll('#mobile-card-list .preproses-card').forEach(function(card) {
                 card.style.display = card.dataset.search.includes(q) ? '' : 'none';
             });
         });

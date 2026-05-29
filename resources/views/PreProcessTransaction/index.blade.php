@@ -504,20 +504,14 @@
         {{-- ── Desktop DataTable ── --}}
         <div class="table-card desktop-table">
             <div class="card-body p-4">
-
                 <form method="GET" action="{{ route('PreProcessTransaction.index') }}" class="mb-3">
-
                     <div class="row g-2 align-items-end">
-
                         <div class="col-5">
-
                             <label class="form-label fw-semibold small mb-1">
                                 Dari Tanggal
                             </label>
-
                             <input type="date" name="date_from" class="form-control form-control-sm"
                                 value="{{ request('date_from') }}">
-
                         </div>
 
                         <div class="col-5">
@@ -547,10 +541,8 @@
 
                             <a href="{{ route('PreProcessTransaction.index') }}"
                                 class="btn btn-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
-
                                 <i class="bi bi-arrow-clockwise"></i>
                                 Reset
-
                             </a>
 
                         </div>
@@ -558,6 +550,34 @@
                     </div>
 
                 </form>
+
+                @if (count($data) == 0)
+                    @if (empty($date_from) && empty($date_to))
+                        <div class="alert alert-info border shadow-sm">
+                            <h6 class="mb-1">
+                                <i class="bi bi-calendar-range"></i>
+                                Belum Ada Filter Tanggal
+                            </h6>
+
+                            <p class="mb-0">
+                                Silakan pilih <strong>Dari Tanggal</strong> dan
+                                <strong>Sampai Tanggal</strong> pada form filter untuk
+                                menampilkan data.
+                            </p>
+                        </div>
+                    @else
+                        <div class="alert alert-warning border shadow-sm">
+                            <h6 class="mb-1">
+                                <i class="bi bi-inbox"></i>
+                                Data Tidak Ditemukan
+                            </h6>
+
+                            <p class="mb-0">
+                                Tidak ada transaksi Pre Proses pada rentang tanggal yang dipilih.
+                            </p>
+                        </div>
+                    @endif
+                @endif
 
                 <div class="table-responsive">
                     <table id="tablePreProcess" class="table table-hover align-middle" style="width:100%;font-size:13px;">
@@ -572,97 +592,55 @@
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr>
-                                <td class="text-center">1.</td>
-                                <td class="fw-semibold text-dark">RK99/01/2026</td>
-                                <td class="fw-semibold text-dark">14-01-2026</td>
-                                <td class="fw-semibold text-dark">—</td>
-                                <td class="fw-semibold text-dark">—</td>
-                                <td class="fw-semibold text-dark">01/2026</td>
-                                <td class="text-center">
-                                    <div class="btn-group shadow-sm">
-                                        <a href="#" class="btn btn-sm btn-light text-dark border" title="Print"><i
-                                                class="bi bi-printer"></i></a>
-                                        <button class="btn btn-sm btn-light text-primary border" title="Edit"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border" title="Hapus"
-                                            onclick="confirmDelete(1)"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">2.</td>
-                                <td class="fw-semibold text-dark">RK99/02/2026</td>
-                                <td class="fw-semibold text-dark">20-01-2026</td>
-                                <td class="fw-semibold text-dark">RK88/01/2026</td>
-                                <td class="fw-semibold text-dark">Revisi bahan baku</td>
-                                <td class="fw-semibold text-dark">01/2026</td>
-                                <td class="text-center">
-                                    <div class="btn-group shadow-sm">
-                                        <a href="#" class="btn btn-sm btn-light text-dark border" title="Print"><i
-                                                class="bi bi-printer"></i></a>
-                                        <button class="btn btn-sm btn-light text-primary border" title="Edit"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border" title="Hapus"
-                                            onclick="confirmDelete(2)"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">3.</td>
-                                <td class="fw-semibold text-dark">RK99/03/2026</td>
-                                <td class="fw-semibold text-dark">05-02-2026</td>
-                                <td class="fw-semibold text-dark">—</td>
-                                <td class="fw-semibold text-dark">Proses tambahan</td>
-                                <td class="fw-semibold text-dark">02/2026</td>
-                                <td class="text-center">
-                                    <div class="btn-group shadow-sm">
-                                        <a href="#" class="btn btn-sm btn-light text-dark border" title="Print"><i
-                                                class="bi bi-printer"></i></a>
-                                        <button class="btn btn-sm btn-light text-primary border" title="Edit"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border" title="Hapus"
-                                            onclick="confirmDelete(3)"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">4.</td>
-                                <td class="fw-semibold text-dark">RK99/04/2026</td>
-                                <td class="fw-semibold text-dark">18-02-2026</td>
-                                <td class="fw-semibold text-dark">RK88/02/2026</td>
-                                <td class="fw-semibold text-dark">—</td>
-                                <td class="fw-semibold text-dark">02/2026</td>
-                                <td class="text-center">
-                                    <div class="btn-group shadow-sm">
-                                        <a href="#" class="btn btn-sm btn-light text-dark border" title="Print"><i
-                                                class="bi bi-printer"></i></a>
-                                        <button class="btn btn-sm btn-light text-primary border" title="Edit"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border" title="Hapus"
-                                            onclick="confirmDelete(4)"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">5.</td>
-                                <td class="fw-semibold text-dark">RK99/05/2026</td>
-                                <td class="fw-semibold text-dark">03-03-2026</td>
-                                <td class="fw-semibold text-dark">—</td>
-                                <td class="fw-semibold text-dark">—</td>
-                                <td class="fw-semibold text-dark">03/2026</td>
-                                <td class="text-center">
-                                    <div class="btn-group shadow-sm">
-                                        <a href="#" class="btn btn-sm btn-light text-dark border" title="Print"><i
-                                                class="bi bi-printer"></i></a>
-                                        <button class="btn btn-sm btn-light text-primary border" title="Edit"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border" title="Hapus"
-                                            onclick="confirmDelete(5)"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+
+                            @foreach ($data as $index => $pp)
+                                <tr>
+                                    <td class="text-center">{{ $index + 1 }}.</td>
+
+                                    <td class="fw-semibold text-dark">
+                                        {{ $pp->BUKTI_PREPROSES }}
+                                    </td>
+
+                                    <td class="fw-semibold text-dark">
+                                        {{ \Carbon\Carbon::parse($pp->TGL_PREPROSES)->format('d-m-Y') }}
+                                    </td>
+
+                                    <td class="fw-semibold text-dark">
+                                        {{ $pp->BUKTI_PREPROSES_LAMA ?: '—' }}
+                                    </td>
+
+                                    <td class="fw-semibold text-dark">
+                                        {{ $pp->NOTES ?: '—' }}
+                                    </td>
+
+                                    <td class="fw-semibold text-dark">
+                                        {{ $pp->PER }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="btn-group shadow-sm">
+
+                                            <a href="" class="btn btn-sm btn-light text-dark border" title="Print">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
+
+                                            <a href="" class="btn btn-sm btn-light text-primary border"
+                                                title="Edit">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+
+                                            <button type="button" class="btn btn-sm btn-light text-danger border"
+                                                title="Hapus" onclick="confirmDelete({{ $pp->NO_ID }})">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+
                         </tbody>
                     </table>
                 </div>

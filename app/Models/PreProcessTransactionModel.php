@@ -10,12 +10,18 @@ class PreProcessTransactionModel extends Model
 {
     use HasFactory;
 
-    public function getData($date_from, $date_to)
+    public function getData($date_from, $date_to, $table)
     {
-        $query = DB::table('ppic_preproses')->orderBy('NO_ID', 'DESC');
+        if ($table === 'ppic_bonbahanbaku_d') {
+            $date_column = 'TGL_BONBAHANBAKU';
+        } else {
+            $date_column = 'TGL_PREPROSES';
+        }
 
-        if ($date_from) $query->where('TGL_PREPROSES', '>=', $date_from);
-        if ($date_to)   $query->where('TGL_PREPROSES', '<=', $date_to);
+        $query = DB::table($table)->orderBy('NO_ID', 'DESC');
+
+        if ($date_from) $query->where($date_column, '>=', $date_from);
+        if ($date_to)   $query->where($date_column, '<=', $date_to);
 
         return $query->get();
     }

@@ -912,81 +912,23 @@
                     </div>
 
                     {{-- ── Sub-overlay B: Tambah Bon ── --}}
+                    {{-- ── Sub-overlay B: Tambah Bon ── --}}
                     <div class="sub-overlay" id="sub-add-bon">
                         <div class="sub-box wide">
                             <div class="sub-head">
-                                <h6><i class="bi bi-box me-2"></i>Data Bon Bahan</h6>
+                                <h6><i class="bi bi-box me-2"></i>Data Bon Bahan Baku</h6>
                                 <button type="button" onclick="closeSubOverlay('sub-add-bon')"
                                     style="background:rgba(0,0,0,.15);border:none;color:#333;width:28px;height:28px;border-radius:50%;cursor:pointer;">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
                             </div>
                             <div class="sub-body">
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-hover" style="font-size:11px;">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Bon Bahan Baku</th>
-                                                <th>Bon Lama</th>
-                                                <th>Notes</th>
-                                                <th>Kadar</th>
-                                                <th>Proses</th>
-                                                <th class="text-end">Gram</th>
-                                                <th class="text-end">Pcs</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{-- ganti dengan @foreach ($dataBon as $bon) --}}
-                                            <tr>
-                                                <td>
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm py-0 btn-select-bon"
-                                                        data-voucher="BB/001/2026" data-karat="375"
-                                                        data-product="RANTAI POLOS" data-gram="150.500">
-                                                        BB/001/2026
-                                                    </button>
-                                                </td>
-                                                <td>—</td>
-                                                <td>—</td>
-                                                <td>375</td>
-                                                <td>RANTAI</td>
-                                                <td class="text-end">150.500</td>
-                                                <td class="text-end">25</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm py-0 btn-select-bon"
-                                                        data-voucher="BB/002/2026" data-karat="750"
-                                                        data-product="RANTAI VARIASI" data-gram="200.000">
-                                                        BB/002/2026
-                                                    </button>
-                                                </td>
-                                                <td>BB/001/2026</td>
-                                                <td>Revisi</td>
-                                                <td>750</td>
-                                                <td>RANTAI</td>
-                                                <td class="text-end">200.000</td>
-                                                <td class="text-end">40</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm py-0 btn-select-bon"
-                                                        data-voucher="BB/003/2026" data-karat="375"
-                                                        data-product="RANTAI LAPIS" data-gram="310.750">
-                                                        BB/003/2026
-                                                    </button>
-                                                </td>
-                                                <td>—</td>
-                                                <td>—</td>
-                                                <td>375</td>
-                                                <td>RANTAI</td>
-                                                <td class="text-end">310.750</td>
-                                                <td class="text-end">60</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <input type="text" id="input-search-bon" class="inp mb-2"
+                                    placeholder="Cari bukti atau nama bahan...">
+                                <div id="list-bon-rows">
+                                    <div class="text-center text-muted py-3" style="font-size:12px;">
+                                        <span class="spinner-border spinner-border-sm"></span> Memuat...
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1036,11 +978,16 @@
         // ── Sub-overlay ──────────────────────────────────────────
         let preProcessListLoaded = false;
         let preProcessListData = [];
+        let bonListLoaded = false;
+        let bonListData = [];
 
         function openSubOverlay(id) {
             document.getElementById(id).classList.add('active');
             if (id === 'sub-list-pre-process' && !preProcessListLoaded) {
                 fetchPreProcessList();
+            }
+            if (id === 'sub-add-bon' && !bonListLoaded) {
+                fetchBonList();
             }
         }
 
@@ -1068,7 +1015,7 @@
             });
         }
 
-        // ── Render list ──────────────────────────────────────────
+        // ── Render list pre process ──────────────────────────────
         function renderPreProcessList(data) {
             if (!data.length) {
                 $('#list-pre-process-rows').html(
@@ -1099,7 +1046,7 @@
             $('#list-pre-process-rows').html(rows);
         }
 
-        // ── Search client-side ───────────────────────────────────
+        // ── Search pre process client-side ───────────────────────
         $(document).on('input', '#input-search-pre-process', function() {
             const keyword = $(this).val().toLowerCase();
             const filtered = preProcessListData.filter(item =>
@@ -1116,20 +1063,77 @@
             closeSubOverlay('sub-list-pre-process');
         }
 
+        // ── Fetch list bon bahan baku ────────────────────────────
+        function fetchBonList() {
+            const dateFrom = $('[name="date_from"]').val();
+            const dateTo = $('[name="date_to"]').val();
+
+            $.get("{{ route('PreProcessTransaction.bon-bahan-baku.list') }}", {
+                date_from: dateFrom,
+                date_to: dateTo
+            }, function(response) {
+                bonListLoaded = true;
+                bonListData = response;
+                renderBonList(response);
+            }).fail(function() {
+                $('#list-bon-rows').html(
+                    '<div class="text-center text-danger py-3" style="font-size:12px;">' +
+                    '<i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
+                );
+            });
+        }
+
+        // ── Render list bon ──────────────────────────────────────
+        function renderBonList(data) {
+            if (!data.length) {
+                $('#list-bon-rows').html(
+                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>'
+                );
+                return;
+            }
+
+            const rows = data.map(item => `
+            <div class="lookup-row"
+                 onclick="selectBon(
+                    '${item.BUKTI_BONBAHANBAKU}',
+                    '${item.BB_KARAT}',
+                    '${item.BB_NAMA}',
+                    '${item.BB_QTYGRAM}')">
+                <div>
+                    <div class="lookup-id">${item.BUKTI_BONBAHANBAKU}</div>
+                    <div class="lookup-sub">
+                        ${item.BB_NAMA || '—'} &nbsp;|&nbsp;
+                        Karat: ${item.BB_KARAT || '—'} &nbsp;|&nbsp;
+                        Gram: ${item.BB_QTYGRAM || '0'}
+                    </div>
+                </div>
+                <i class="bi bi-chevron-right text-warning"></i>
+            </div>
+        `).join('');
+
+            $('#list-bon-rows').html(rows);
+        }
+
+        // ── Search bon client-side ───────────────────────────────
+        $(document).on('input', '#input-search-bon', function() {
+            const keyword = $(this).val().toLowerCase();
+            const filtered = bonListData.filter(item =>
+                (item.BUKTI_BONBAHANBAKU || '').toLowerCase().includes(keyword) ||
+                (item.BB_NAMA || '').toLowerCase().includes(keyword)
+            );
+            renderBonList(filtered);
+        });
+
         // ── Select bon → isi detail row ──────────────────────────
-        $(document).on('click', '.btn-select-bon', function() {
-            const voucher = $(this).data('voucher');
-            const karat = $(this).data('karat');
-            const product = $(this).data('product');
-            const gram = $(this).data('gram');
+        function selectBon(voucherCode, karat, productName, gram) {
             let filled = false;
 
             $('#detail-body tr').each(function() {
                 const pv = $(this).find('.fc-process-voucher');
                 if (pv.val() === '') {
-                    pv.val(voucher);
+                    pv.val(voucherCode);
                     $(this).find('.fc-gram-a').val(gram);
-                    $(this).find('[name="product_name[]"]').val(product);
+                    $(this).find('[name="product_name[]"]').val(productName);
                     calcRow($(this).find('.fc-gram-a')[0]);
                     filled = true;
                     return false;
@@ -1137,13 +1141,13 @@
             });
 
             if (!filled) addDetailRow({
-                voucher,
+                voucher: voucherCode,
                 karat,
-                product,
+                product: productName,
                 gram
             });
             closeSubOverlay('sub-add-bon');
-        });
+        }
 
         // ── Delete detail row ────────────────────────────────────
         $(document).on('click', '.btn-delete-row', function() {
@@ -1255,6 +1259,7 @@
             });
         });
 
+        // ── Handle open list pre process ─────────────────────────
         function handleOpenListPreProcess() {
             const btn = document.getElementById('btn-open-list-pre-process');
             if (btn.dataset.hasDate === '0') {

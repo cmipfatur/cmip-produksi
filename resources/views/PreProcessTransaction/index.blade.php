@@ -517,12 +517,12 @@
                         <div class="col-5">
                             <label class="form-label fw-semibold small mb-1">Dari Tanggal</label>
                             <input type="date" name="date_from" class="form-control form-control-sm"
-                                value="{{ request('date_from') }}">
+                                value="{{ request('date_from') }}" required>
                         </div>
                         <div class="col-5">
                             <label class="form-label fw-semibold small mb-1">Sampai Tanggal</label>
                             <input type="date" name="date_to" class="form-control form-control-sm"
-                                value="{{ request('date_to') }}">
+                                value="{{ request('date_to') }}" required>
                         </div>
                         <div class="col">
                             <button type="submit"
@@ -541,13 +541,13 @@
 
                 @if (count($data) == 0)
                     @if (empty($date_from) && empty($date_to))
-                        <div class="alert alert-info border shadow-sm">
-                            <h6 class="mb-1"><i class="bi bi-calendar-range"></i> Belum Ada Filter Tanggal</h6>
+                        <div class="alert alert-warning border shadow-sm text-center">
+                            <h6 class="mb-1"><i class="bi bi-calendar-range"></i> Belum Isi Filter Tanggal</h6>
                             <p class="mb-0">Silakan pilih <strong>Dari Tanggal</strong> dan <strong>Sampai
                                     Tanggal</strong> untuk menampilkan data.</p>
                         </div>
                     @else
-                        <div class="alert alert-warning border shadow-sm">
+                        <div class="alert alert-warning border shadow-sm text-center">
                             <h6 class="mb-1"><i class="bi bi-inbox"></i> Data Tidak Ditemukan</h6>
                             <p class="mb-0">Tidak ada transaksi Pre Proses pada rentang tanggal yang dipilih.</p>
                         </div>
@@ -734,8 +734,10 @@
                                     placeholder="Keterangan tambahan…">
                             </div>
                             <div class="col-6 col-md-2 d-flex align-items-end">
-                                <button type="button" class="btn btn-info btn-sm fw-bold text-white w-100"
-                                    onclick="openSubOverlay('sub-list-pre-process')">
+                                <button type="button" id="btn-open-list-pre-process"
+                                    class="btn btn-info btn-sm fw-bold text-white w-100"
+                                    onclick="handleOpenListPreProcess()"
+                                    data-has-date="{{ empty(request('date_from')) ? '0' : '1' }}">
                                     <i class="bi bi-search me-1"></i>Daftar Pre Proses
                                 </button>
                             </div>
@@ -1252,5 +1254,14 @@
                 card.style.display = card.dataset.search.includes(q) ? '' : 'none';
             });
         });
+
+        function handleOpenListPreProcess() {
+            const btn = document.getElementById('btn-open-list-pre-process');
+            if (btn.dataset.hasDate === '0') {
+                alert('Pilih Dari Tanggal terlebih dahulu!');
+                return;
+            }
+            openSubOverlay('sub-list-pre-process');
+        }
     </script>
 @endsection

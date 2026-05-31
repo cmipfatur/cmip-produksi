@@ -11,11 +11,10 @@ class PreProcessTransactionController extends Controller
     {
         $date_from = request('date_from');
         $date_to   = request('date_to');
-        $table     = request('table', 'ppic_preproses');
         $data      = [];
 
         if ($date_from || $date_to) {
-            $data = (new PreProcessTransactionModel())->getData($date_from, $date_to, $table);
+            $data = (new PreProcessTransactionModel())->getData($date_from, $date_to, 'ppic_preproses');
         }
 
         return view('PreProcessTransaction.index', compact('data', 'date_from', 'date_to'));
@@ -25,9 +24,8 @@ class PreProcessTransactionController extends Controller
     {
         $date_from = request('date_from');
         $date_to   = request('date_to');
-        $table     = request('table', 'ppic_preproses');
 
-        $data = (new PreProcessTransactionModel())->getData($date_from, $date_to, $table);
+        $data = (new PreProcessTransactionModel())->getData($date_from, $date_to, 'ppic_preproses');
         return response()->json($data);
     }
 
@@ -35,9 +33,26 @@ class PreProcessTransactionController extends Controller
     {
         $date_from = request('date_from');
         $date_to   = request('date_to');
-        $table     = request('table', 'ppic_bonbahanbaku_d');
 
-        $data = (new PreProcessTransactionModel())->getData($date_from, $date_to, $table);
+        $data = (new PreProcessTransactionModel())->getData($date_from, $date_to, 'ppic_bonbahanbaku_d');
         return response()->json($data);
+    }
+
+    public function getListKarat()
+    {
+        $data = (new PreProcessTransactionModel())->getData('', '', 'karat');
+        return response()->json($data);
+    }
+
+    public function store(Request $request)
+    {
+        // store logic here
+        return redirect()->route('PreProcessTransaction.index')->with('success', 'Data berhasil disimpan.');
+    }
+
+    public function destroy($id)
+    {
+        // delete logic here
+        return redirect()->route('PreProcessTransaction.index')->with('success', 'Data berhasil dihapus.');
     }
 }

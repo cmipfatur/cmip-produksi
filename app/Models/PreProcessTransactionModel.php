@@ -18,7 +18,22 @@ class PreProcessTransactionModel extends Model
             $date_column = 'TGL_PREPROSES';
         }
 
-        $query = DB::table($table)->orderBy('NO_ID', 'DESC');
+        if ($table === 'karat') {
+            return DB::table('karat')
+                ->select('NO_ID', 'KARAT', 'KARAT_GOL', 'URUT')
+                ->orderBy('URUT', 'ASC')
+                ->get();
+        }
+
+        if ($table === 'ppic_bonbahanbaku_d') {
+            $query = DB::table('ppic_bonbahanbaku_d')
+                ->select('NO_ID', 'BUKTI_BONBAHANBAKU', 'TGL_BONBAHANBAKU', 'BB_KARAT', 'BB_NAMA', 'BB_QTYGRAM', 'KET')
+                ->orderBy('NO_ID', 'DESC');
+        } else {
+            $query = DB::table('ppic_preproses')
+                ->select('NO_ID', 'BUKTI_PREPROSES', 'TGL_PREPROSES', 'BUKTI_PREPROSES_LAMA', 'PER', 'NOTES')
+                ->orderBy('NO_ID', 'DESC');
+        }
 
         if ($date_from) $query->where($date_column, '>=', $date_from);
         if ($date_to)   $query->where($date_column, '<=', $date_to);

@@ -3,6 +3,7 @@
 @section('content')
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://npmcdn.com/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 
     <style>
         .page-header-row {
@@ -60,7 +61,6 @@
             background: rgba(255, 255, 255, .45);
         }
 
-        /* ── Form Modal ── */
         .lbl {
             font-size: 11px;
             font-weight: 700;
@@ -139,6 +139,43 @@
 
         .detail-table .fc[readonly] {
             background: #f5f5f3;
+        }
+
+        /* ── Select2 di detail table ── */
+        .select2-container .select2-selection--single {
+            height: 26px !important;
+            border: 1px solid #d0d0d0 !important;
+            border-radius: 4px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 26px !important;
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            padding-left: 5px !important;
+            color: #1a1a1a !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 26px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: #aaa !important;
+        }
+
+        .select2-dropdown {
+            font-size: 11px !important;
+        }
+
+        .select2-container--default .select2-results__option--highlighted {
+            background-color: #E8A020 !important;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            font-size: 11px !important;
+            border-radius: 4px !important;
         }
 
         /* ── Summary ── */
@@ -483,8 +520,7 @@
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1" style="font-size:12px;">
-                        <li class="breadcrumb-item">
-                            <a href="#" class="text-decoration-none text-muted">Transaksi</a>
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Transaksi</a>
                         </li>
                         <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">Pre Proses</li>
                     </ol>
@@ -517,12 +553,12 @@
                         <div class="col-5">
                             <label class="form-label fw-semibold small mb-1">Dari Tanggal</label>
                             <input type="date" name="date_from" class="form-control form-control-sm"
-                                value="{{ request('date_from') }}" required>
+                                value="{{ request('date_from') }}">
                         </div>
                         <div class="col-5">
                             <label class="form-label fw-semibold small mb-1">Sampai Tanggal</label>
                             <input type="date" name="date_to" class="form-control form-control-sm"
-                                value="{{ request('date_to') }}" required>
+                                value="{{ request('date_to') }}">
                         </div>
                         <div class="col">
                             <button type="submit"
@@ -579,13 +615,10 @@
                                     <td class="fw-semibold text-dark">{{ $item->PER }}</td>
                                     <td class="text-center">
                                         <div class="btn-group shadow-sm">
-                                            <a href="#" class="btn btn-sm btn-light text-dark border" title="Print">
-                                                <i class="bi bi-printer"></i>
-                                            </a>
+                                            <a href="#" class="btn btn-sm btn-light text-dark border"
+                                                title="Print"><i class="bi bi-printer"></i></a>
                                             <a href="#" class="btn btn-sm btn-light text-primary border"
-                                                title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
+                                                title="Edit"><i class="bi bi-pencil-square"></i></a>
                                             <button type="button" class="btn btn-sm btn-light text-danger border"
                                                 title="Hapus" onclick="confirmDelete({{ $item->NO_ID }})">
                                                 <i class="bi bi-trash"></i>
@@ -606,7 +639,8 @@
             <div class="mobile-search-bar">
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" id="input-mobile-search" class="form-control" placeholder="Cari bukti, periode…">
+                    <input type="text" id="input-mobile-search" class="form-control"
+                        placeholder="Cari bukti, periode…">
                 </div>
                 <button class="btn-filter" title="Filter"><i class="bi bi-sliders2"></i></button>
             </div>
@@ -647,14 +681,11 @@
                             <div>
                                 <div class="meta-key">Bukti Lama</div>
                                 <div class="meta-val {{ $item->BUKTI_PREPROSES_LAMA ? '' : 'empty' }}">
-                                    {{ $item->BUKTI_PREPROSES_LAMA ?: '—' }}
-                                </div>
+                                    {{ $item->BUKTI_PREPROSES_LAMA ?: '—' }}</div>
                             </div>
                             <div>
                                 <div class="meta-key">Notes</div>
-                                <div class="meta-val {{ $item->NOTES ? '' : 'empty' }}">
-                                    {{ $item->NOTES ?: '—' }}
-                                </div>
+                                <div class="meta-val {{ $item->NOTES ? '' : 'empty' }}">{{ $item->NOTES ?: '—' }}</div>
                             </div>
                         </div>
                         <hr class="card-divider">
@@ -672,7 +703,6 @@
         </div>
 
     </div>{{-- /container-fluid --}}
-
 
     {{-- ══════════════════════════════════════════════════
      MODAL TAMBAH PRE PROSES
@@ -762,7 +792,7 @@
                                         <th style="width:36px">REC</th>
                                         <th style="width:110px">Bukti Proses</th>
                                         <th style="width:110px">Proses Selanjutnya</th>
-                                        <th style="width:80px">Kadar</th>
+                                        <th style="width:100px">Kadar</th>
                                         <th style="width:96px">Tgl Proses</th>
                                         <th style="width:76px">Operator 1</th>
                                         <th style="width:76px">Operator 2</th>
@@ -794,8 +824,8 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="karat[]" class="fc" required>
-                                                <option value="">— Karat —</option>
+                                            <select name="karat[]" class="fc-karat" style="width:100%" required>
+                                                <option value="">— Kadar —</option>
                                             </select>
                                         </td>
                                         <td><input name="process_date_detail[]" type="text" class="fc fp-date"
@@ -912,7 +942,6 @@
                     </div>
 
                     {{-- ── Sub-overlay B: Tambah Bon ── --}}
-                    {{-- ── Sub-overlay B: Tambah Bon ── --}}
                     <div class="sub-overlay" id="sub-add-bon">
                         <div class="sub-box wide">
                             <div class="sub-head">
@@ -949,6 +978,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         // ── DataTable ────────────────────────────────────────────
@@ -975,20 +1005,70 @@
         }
         document.addEventListener('DOMContentLoaded', initFlatpickr);
 
-        // ── Sub-overlay ──────────────────────────────────────────
+        // ── State ─────────────────────────────────────────────────
         let preProcessListLoaded = false;
         let preProcessListData = [];
         let bonListLoaded = false;
         let bonListData = [];
+        let karatListLoaded = false;
+        let karatListData = [];
 
+        // ── Select2 karat ─────────────────────────────────────────
+        function initKaratSelect2(selectEl, selectedValue = '') {
+            $(selectEl).select2({
+                placeholder: '— Kadar —',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#modal-add-pre-process')
+            });
+
+            if (selectedValue) {
+                if ($(selectEl).find(`option[value="${selectedValue}"]`).length === 0) {
+                    $(selectEl).append(new Option(selectedValue, selectedValue, true, true));
+                }
+                $(selectEl).val(selectedValue).trigger('change');
+            }
+        }
+
+        function populateKaratSelect(selectEl, selectedValue = '') {
+            const $sel = $(selectEl);
+            $sel.empty().append('<option value="">— Kadar —</option>');
+            karatListData.forEach(item => {
+                $sel.append(new Option(item.KARAT, item.KARAT, false, item.KARAT === selectedValue));
+            });
+            $sel.val(selectedValue).trigger('change');
+        }
+
+        function populateAllKaratSelect() {
+            $('#detail-body .fc-karat').each(function() {
+                populateKaratSelect(this);
+            });
+        }
+
+        // ── Fetch karat saat modal dibuka ─────────────────────────
+        $('#modal-add-pre-process').on('shown.bs.modal', function() {
+            if (!karatListLoaded) {
+                fetchKaratList();
+            }
+            // init select2 semua .fc-karat yang belum diinit
+            $('#detail-body .fc-karat:not(.select2-hidden-accessible)').each(function() {
+                initKaratSelect2(this);
+            });
+        });
+
+        function fetchKaratList() {
+            $.get("{{ route('PreProcessTransaction.karat.list') }}", function(response) {
+                karatListLoaded = true;
+                karatListData = response;
+                populateAllKaratSelect();
+            });
+        }
+
+        // ── Sub-overlay ──────────────────────────────────────────
         function openSubOverlay(id) {
             document.getElementById(id).classList.add('active');
-            if (id === 'sub-list-pre-process' && !preProcessListLoaded) {
-                fetchPreProcessList();
-            }
-            if (id === 'sub-add-bon' && !bonListLoaded) {
-                fetchBonList();
-            }
+            if (id === 'sub-list-pre-process' && !preProcessListLoaded) fetchPreProcessList();
+            if (id === 'sub-add-bon' && !bonListLoaded) fetchBonList();
         }
 
         function closeSubOverlay(id) {
@@ -1015,38 +1095,28 @@
             });
         }
 
-        // ── Render list pre process ──────────────────────────────
         function renderPreProcessList(data) {
             if (!data.length) {
                 $('#list-pre-process-rows').html(
-                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>'
-                );
+                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>');
                 return;
             }
-
             const rows = data.map(item => {
                 const voucherCode = item.BUKTI_PREPROSES || '';
                 const oldVoucher = item.BUKTI_PREPROSES_LAMA || '';
                 const period = item.PER || '';
-
                 return `
-                <div class="lookup-row"
-                     onclick="selectPreProcess('${voucherCode}', '${oldVoucher}', '${period}')">
-                    <div>
-                        <div class="lookup-id">${voucherCode}</div>
-                        <div class="lookup-sub">
-                            Lama: ${oldVoucher || '—'} &nbsp;|&nbsp; Periode: ${period}
+                    <div class="lookup-row" onclick="selectPreProcess('${voucherCode}', '${oldVoucher}', '${period}')">
+                        <div>
+                            <div class="lookup-id">${voucherCode}</div>
+                            <div class="lookup-sub">Lama: ${oldVoucher || '—'} &nbsp;|&nbsp; Periode: ${period}</div>
                         </div>
-                    </div>
-                    <i class="bi bi-chevron-right text-warning"></i>
-                </div>
-            `;
+                        <i class="bi bi-chevron-right text-warning"></i>
+                    </div>`;
             }).join('');
-
             $('#list-pre-process-rows').html(rows);
         }
 
-        // ── Search pre process client-side ───────────────────────
         $(document).on('input', '#input-search-pre-process', function() {
             const keyword = $(this).val().toLowerCase();
             const filtered = preProcessListData.filter(item =>
@@ -1056,14 +1126,13 @@
             renderPreProcessList(filtered);
         });
 
-        // ── Select pre process → isi form ────────────────────────
         function selectPreProcess(voucherCode, oldVoucher, period) {
             $('#input-old-voucher').val(oldVoucher || '');
             $('#input-period').val(period || '');
             closeSubOverlay('sub-list-pre-process');
         }
 
-        // ── Fetch list bon bahan baku ────────────────────────────
+        // ── Fetch list bon ───────────────────────────────────────
         function fetchBonList() {
             const dateFrom = $('[name="date_from"]').val();
             const dateTo = $('[name="date_to"]').val();
@@ -1083,38 +1152,28 @@
             });
         }
 
-        // ── Render list bon ──────────────────────────────────────
         function renderBonList(data) {
             if (!data.length) {
                 $('#list-bon-rows').html(
-                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>'
-                );
+                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>');
                 return;
             }
-
             const rows = data.map(item => `
-            <div class="lookup-row"
-                 onclick="selectBon(
-                    '${item.BUKTI_BONBAHANBAKU}',
-                    '${item.BB_KARAT}',
-                    '${item.BB_NAMA}',
-                    '${item.BB_QTYGRAM}')">
-                <div>
-                    <div class="lookup-id">${item.BUKTI_BONBAHANBAKU}</div>
-                    <div class="lookup-sub">
-                        ${item.BB_NAMA || '—'} &nbsp;|&nbsp;
-                        Karat: ${item.BB_KARAT || '—'} &nbsp;|&nbsp;
-                        Gram: ${item.BB_QTYGRAM || '0'}
+                <div class="lookup-row"
+                     onclick="selectBon('${item.BUKTI_BONBAHANBAKU}', '${item.BB_KARAT}', '${item.BB_NAMA}', '${item.BB_QTYGRAM}')">
+                    <div>
+                        <div class="lookup-id">${item.BUKTI_BONBAHANBAKU}</div>
+                        <div class="lookup-sub">
+                            ${item.BB_NAMA || '—'} &nbsp;|&nbsp;
+                            Karat: ${item.BB_KARAT || '—'} &nbsp;|&nbsp;
+                            Gram: ${item.BB_QTYGRAM || '0'}
+                        </div>
                     </div>
-                </div>
-                <i class="bi bi-chevron-right text-warning"></i>
-            </div>
-        `).join('');
-
+                    <i class="bi bi-chevron-right text-warning"></i>
+                </div>`).join('');
             $('#list-bon-rows').html(rows);
         }
 
-        // ── Search bon client-side ───────────────────────────────
         $(document).on('input', '#input-search-bon', function() {
             const keyword = $(this).val().toLowerCase();
             const filtered = bonListData.filter(item =>
@@ -1124,22 +1183,25 @@
             renderBonList(filtered);
         });
 
-        // ── Select bon → isi detail row ──────────────────────────
         function selectBon(voucherCode, karat, productName, gram) {
             let filled = false;
-
             $('#detail-body tr').each(function() {
                 const pv = $(this).find('.fc-process-voucher');
                 if (pv.val() === '') {
                     pv.val(voucherCode);
                     $(this).find('.fc-gram-a').val(gram);
                     $(this).find('[name="product_name[]"]').val(productName);
+                    // set karat di select2
+                    const karatSel = $(this).find('.fc-karat');
+                    if (karatSel.find(`option[value="${karat}"]`).length === 0) {
+                        karatSel.append(new Option(karat, karat));
+                    }
+                    karatSel.val(karat).trigger('change');
                     calcRow($(this).find('.fc-gram-a')[0]);
                     filled = true;
                     return false;
                 }
             });
-
             if (!filled) addDetailRow({
                 voucher: voucherCode,
                 karat,
@@ -1174,47 +1236,52 @@
             rowCount++;
             const today = "{{ date('d-m-Y') }}";
             const opts = `
-            <option value="BOL">BOLA</option>
-            <option value="COR">COR</option>
-            <option value="GLN">GILING</option>
-            <option value="HLL">HOLLOW</option>
-            <option value="PPL">PATRI PLAT</option>
-            <option value="PIP">PIPA</option>
-            <option value="STM">STAMPING</option>
-            <option value="TRK">TARIK</option>
-            <option value="SRT">SORTIR</option>`;
+                <option value="BOL">BOLA</option><option value="COR">COR</option>
+                <option value="GLN">GILING</option><option value="HLL">HOLLOW</option>
+                <option value="PPL">PATRI PLAT</option><option value="PIP">PIPA</option>
+                <option value="STM">STAMPING</option><option value="TRK">TARIK</option>
+                <option value="SRT">SORTIR</option>`;
 
             const row = `<tr>
-            <td><input name="rec[]" type="text" value="${rowCount}" class="fc fc-rec" readonly></td>
-            <td><input name="process_voucher[]" type="text" value="${data.voucher || ''}" class="fc fc-process-voucher" readonly></td>
-            <td><select name="next_process[]" class="fc fc-next-process" required>${opts}</select></td>
-            <td><select name="karat[]" class="fc" required>
-                <option value="${data.karat || ''}" selected>${data.karat || '— Karat —'}</option>
-            </select></td>
-            <td><input name="process_date_detail[]" type="text" class="fc fp-date" value="${today}" required></td>
-            <td><input name="operator_a[]" type="text" class="fc"></td>
-            <td><input name="operator_b[]" type="text" class="fc"></td>
-            <td>
-                <input name="gram_a[]" type="text" value="${data.gram || '0'}" class="fc text-end text-primary fw-bold fc-gram-a" oninput="calcRow(this)">
-                <input name="gram_b[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-b mt-1" oninput="calcRow(this)">
-                <input name="gram_c[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-c mt-1" oninput="calcRow(this)">
-            </td>
-            <td>
-                <input name="gram_d[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-d" oninput="calcRow(this)">
-                <input name="gram_e[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-e mt-1" oninput="calcRow(this)">
-                <input name="gram_f[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-f mt-1" oninput="calcRow(this)">
-            </td>
-            <td><input name="gram_total[]" type="text" value="0" class="fc text-end text-success fw-bold fc-gram-total" readonly></td>
-            <td><input name="product_name[]" type="text" value="${data.product || ''}" class="fc" required></td>
-            <td><input name="detail_notes[]" type="text" class="fc"></td>
-            <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0">
-                <i class="bi bi-trash"></i>
-            </button></td>
-        </tr>`;
+                <td><input name="rec[]" type="text" value="${rowCount}" class="fc fc-rec" readonly></td>
+                <td><input name="process_voucher[]" type="text" value="${data.voucher || ''}" class="fc fc-process-voucher" readonly></td>
+                <td><select name="next_process[]" class="fc fc-next-process" required>${opts}</select></td>
+                <td>
+                    <select name="karat[]" class="fc-karat" style="width:100%" required>
+                        <option value="">— Kadar —</option>
+                    </select>
+                </td>
+                <td><input name="process_date_detail[]" type="text" class="fc fp-date" value="${today}" required></td>
+                <td><input name="operator_a[]" type="text" class="fc"></td>
+                <td><input name="operator_b[]" type="text" class="fc"></td>
+                <td>
+                    <input name="gram_a[]" type="text" value="${data.gram || '0'}" class="fc text-end text-primary fw-bold fc-gram-a" oninput="calcRow(this)">
+                    <input name="gram_b[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-b mt-1" oninput="calcRow(this)">
+                    <input name="gram_c[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-c mt-1" oninput="calcRow(this)">
+                </td>
+                <td>
+                    <input name="gram_d[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-d" oninput="calcRow(this)">
+                    <input name="gram_e[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-e mt-1" oninput="calcRow(this)">
+                    <input name="gram_f[]" type="text" value="0" class="fc text-end text-primary fw-bold fc-gram-f mt-1" oninput="calcRow(this)">
+                </td>
+                <td><input name="gram_total[]" type="text" value="0" class="fc text-end text-success fw-bold fc-gram-total" readonly></td>
+                <td><input name="product_name[]" type="text" value="${data.product || ''}" class="fc" required></td>
+                <td><input name="detail_notes[]" type="text" class="fc"></td>
+                <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0">
+                    <i class="bi bi-trash"></i>
+                </button></td>
+            </tr>`;
 
             $('#detail-body').append(row);
             initFlatpickr();
             reNumberRows();
+
+            // init select2 & populate karat di baris baru
+            const newKaratSel = $('#detail-body tr:last .fc-karat');
+            initKaratSelect2(newKaratSel[0]);
+            if (karatListLoaded) {
+                populateKaratSelect(newKaratSel[0], data.karat || '');
+            }
         }
 
         // ── Calc row total ───────────────────────────────────────
@@ -1228,7 +1295,6 @@
             calcGrandTotal();
         }
 
-        // ── Calc grand total ─────────────────────────────────────
         function calcGrandTotal() {
             let gt = 0;
             $('.fc-gram-total').each(function() {

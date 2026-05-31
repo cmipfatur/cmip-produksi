@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse" id="mainNavbar">
 
         {{-- ========== DESKTOP MENU ========== --}}
-        <ul class="navbar-nav me-auto align-items-lg-center gap-1 d-none d-lg-flex">
+        <ul class="navbar-nav mx-auto align-items-lg-center gap-1 d-none d-lg-flex">
 
             {{-- TRANSAKSI MEGA DROPDOWN --}}
             <li class="nav-item dropdown">
@@ -541,7 +541,8 @@
                                 <a href="{{ route('PreProcessTransaction.index') }}"
                                     class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"
                                     style="background:#fff7ed;color:#92400e;border:0.5px solid #fde68a;padding:5px 10px;font-size:12px;">
-                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> Pre Proses
+                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> Pre
+                                    Proses
                                 </a>
                                 <a href=".../Transaksi_BSTSortir/index_Transaksi_BSTSortir"
                                     class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"
@@ -551,7 +552,8 @@
                                 <a href=".../Transaksi_BSTPolesGotri/index_Transaksi_BSTPolesGotri"
                                     class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"
                                     style="background:#fff7ed;color:#92400e;border:0.5px solid #fde68a;padding:5px 10px;font-size:12px;">
-                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> Poles Gotri
+                                    <i class="bi bi-star-fill text-warning" style="font-size:11px;"></i> Poles
+                                    Gotri
                                 </a>
                                 <a href=".../Transaksi_BSTOven/index_Transaksi_BSTOven"
                                     class="badge rounded-pill text-decoration-none d-flex align-items-center gap-1"

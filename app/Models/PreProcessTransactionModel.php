@@ -40,4 +40,9 @@ class PreProcessTransactionModel extends Model
 
         return $query->get();
     }
+
+    public function storeData($table, $data)
+    {
+        return DB::table($table)->insert($data);
+    }
 }

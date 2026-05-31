@@ -1032,7 +1032,7 @@
                             <div class="col-6 col-md-2 d-flex align-items-end">
                                 <button type="button" class="btn btn-info btn-sm fw-bold text-white w-100"
                                     onclick="openSubOverlay('sub-edit-list-pre-process')">
-                                    <i class="bi bi-search me-1"></i>Daftar PP
+                                    <i class="bi bi-search me-1"></i>Daftar Pre Proses
                                 </button>
                             </div>
                         </div>
@@ -1326,7 +1326,7 @@
             }).fail(function() {
                 $('#list-pre-process-rows').html(
                     '<div class="text-center text-danger py-3" style="font-size:12px;"><i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
-                    );
+                );
             });
         }
 
@@ -1416,7 +1416,7 @@
             }).fail(function() {
                 $('#list-bon-rows').html(
                     '<div class="text-center text-danger py-3" style="font-size:12px;"><i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
-                    );
+                );
             });
         }
 

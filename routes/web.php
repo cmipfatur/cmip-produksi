@@ -24,4 +24,6 @@ Route::controller(PreProcessTransactionController::class)
         Route::post('/store',    'store')->name('store');
         Route::get('/{id}',      'show')->name('show');
         Route::delete('/{id}',   'destroy')->name('destroy');
+        Route::get('/{id}/edit',  'edit')->name('edit');
+        Route::put('/{id}',       'update')->name('update');
     });

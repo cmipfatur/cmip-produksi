@@ -26,7 +26,6 @@
             display: none;
         }
 
-        /* ── Modal ── */
         .modal-head-warning {
             background: #E8A020;
             padding: 12px 18px;
@@ -105,7 +104,6 @@
             margin: 14px 0 10px;
         }
 
-        /* ── Detail Table ── */
         .detail-table th {
             font-size: 10px;
             color: #444;
@@ -141,7 +139,6 @@
             background: #f5f5f3;
         }
 
-        /* ── Select2 di detail table ── */
         .select2-container .select2-selection--single {
             height: 26px !important;
             border: 1px solid #d0d0d0 !important;
@@ -178,7 +175,6 @@
             border-radius: 4px !important;
         }
 
-        /* ── Summary ── */
         .sum-box {
             background: #f5f5f3;
             border-radius: 8px;
@@ -212,7 +208,6 @@
             color: #aaa;
         }
 
-        /* ── Sub-overlay ── */
         .sub-overlay {
             display: none;
             position: absolute;
@@ -300,7 +295,6 @@
             margin-top: 1px;
         }
 
-        /* ── Mobile ── */
         @media (max-width: 767.98px) {
             .desktop-table {
                 display: none !important;
@@ -493,12 +487,14 @@
                 background: #FCEBEB;
             }
 
-            #modal-add-pre-process .modal-dialog {
+            #modal-add-pre-process .modal-dialog,
+            #modal-edit-pre-process .modal-dialog {
                 margin: 0;
                 max-width: 100%;
             }
 
-            #modal-add-pre-process .modal-content {
+            #modal-add-pre-process .modal-content,
+            #modal-edit-pre-process .modal-content {
                 border-radius: 0;
                 min-height: 100vh;
             }
@@ -615,10 +611,13 @@
                                     <td class="fw-semibold text-dark">{{ $item->PER }}</td>
                                     <td class="text-center">
                                         <div class="btn-group shadow-sm">
-                                            <a href="#" class="btn btn-sm btn-light text-dark border"
-                                                title="Print"><i class="bi bi-printer"></i></a>
+                                            <a href="#" class="btn btn-sm btn-light text-dark border" title="Print">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
                                             <a href="#" class="btn btn-sm btn-light text-primary border"
-                                                title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                                title="Edit" onclick="openEditModal({{ $item->NO_ID }}); return false;">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
                                             <button type="button" class="btn btn-sm btn-light text-danger border"
                                                 title="Hapus" onclick="confirmDelete({{ $item->NO_ID }})">
                                                 <i class="bi bi-trash"></i>
@@ -691,8 +690,10 @@
                         <hr class="card-divider">
                         <div class="card-actions">
                             <a href="#" class="card-action-btn"><i class="bi bi-printer"></i> Cetak</a>
-                            <a href="#" class="card-action-btn btn-edit"><i class="bi bi-pencil-square"></i>
-                                Edit</a>
+                            <a href="#" class="card-action-btn btn-edit"
+                                onclick="openEditModal({{ $item->NO_ID }}); return false;">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
                             <button class="card-action-btn btn-del" onclick="confirmDelete({{ $item->NO_ID }})">
                                 <i class="bi bi-trash"></i> Hapus
                             </button>
@@ -724,7 +725,6 @@
                     <form id="form-pre-process" action="{{ route('PreProcessTransaction.store') }}" method="POST">
                         @csrf
 
-                        {{-- Section 1 --}}
                         <div class="sec-div">Informasi Pre Proses</div>
                         <div class="row g-2">
                             <div class="col-6 col-md-3">
@@ -773,7 +773,6 @@
                             </div>
                         </div>
 
-                        {{-- Section 2 --}}
                         <div class="sec-div">Detail Bon Bahan</div>
                         <div class="d-flex gap-2 mb-2 flex-wrap">
                             <button type="button" class="btn btn-info btn-sm fw-bold text-white"
@@ -786,7 +785,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table id="detail-table" class="table table-bordered table-sm detail-table">
+                            <table class="table table-bordered table-sm detail-table">
                                 <thead>
                                     <tr>
                                         <th style="width:36px">REC</th>
@@ -878,7 +877,6 @@
                             </table>
                         </div>
 
-                        {{-- Section 3 --}}
                         <div class="sec-div">Ringkasan</div>
                         <div class="row g-2">
                             <div class="col-12 col-md-4">
@@ -907,7 +905,6 @@
                             </div>
                         </div>
 
-                        {{-- Footer --}}
                         <div class="d-flex gap-2 justify-content-end mt-3 pt-3 border-top">
                             <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
                                 <i class="bi bi-x-lg me-1"></i>Batal
@@ -919,7 +916,7 @@
 
                     </form>
 
-                    {{-- ── Sub-overlay A: Daftar Pre Proses ── --}}
+                    {{-- Sub-overlay A: Daftar Pre Proses --}}
                     <div class="sub-overlay" id="sub-list-pre-process">
                         <div class="sub-box">
                             <div class="sub-head">
@@ -941,7 +938,7 @@
                         </div>
                     </div>
 
-                    {{-- ── Sub-overlay B: Tambah Bon ── --}}
+                    {{-- Sub-overlay B: Tambah Bon --}}
                     <div class="sub-overlay" id="sub-add-bon">
                         <div class="sub-box wide">
                             <div class="sub-head">
@@ -966,7 +963,210 @@
                 </div>{{-- /modal-body --}}
             </div>
         </div>
-    </div>{{-- /modal-add-pre-process --}}
+    </div>
+
+    {{-- ══════════════════════════════════════════════════
+     MODAL EDIT PRE PROSES
+    ══════════════════════════════════════════════════ --}}
+    <div class="modal fade" id="modal-edit-pre-process" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content" style="border-radius:12px;border:none;position:relative;overflow:visible;">
+
+                <div class="modal-head-warning" style="background:#185FA5;">
+                    <span class="modal-title-text">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Transaksi Pre Proses
+                    </span>
+                    <button type="button" class="btn-close-white" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body p-3 p-md-4" style="position:relative;">
+
+                    <div id="edit-loading" class="text-center py-5">
+                        <span class="spinner-border text-warning"></span>
+                        <div class="mt-2 text-muted" style="font-size:12px;">Memuat data...</div>
+                    </div>
+
+                    <form id="form-edit-pre-process" method="POST" style="display:none;">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="sec-div">Informasi Pre Proses</div>
+                        <div class="row g-2">
+                            <div class="col-6 col-md-3">
+                                <label class="lbl">Bukti Pre Proses</label>
+                                <input type="text" id="edit-voucher-code" name="voucher_code" class="inp"
+                                    required>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="lbl">Tgl Pre Proses</label>
+                                <input type="text" id="edit-process-date" name="process_date" class="inp fp-date"
+                                    required>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="lbl">Bukti Pre Proses Lama</label>
+                                <input type="text" id="edit-old-voucher" name="old_voucher" class="inp" readonly
+                                    placeholder="—">
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="lbl">Periode</label>
+                                <select id="edit-period" name="period" class="inp" style="height:32px;" required>
+                                    <option value="">-- Pilih --</option>
+                                    @foreach (['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $m)
+                                        <option value="{{ $m }}/2026">{{ $m }}/2026</option>
+                                    @endforeach
+                                    <option value="11/2025">11/2025</option>
+                                    <option value="12/2025">12/2025</option>
+                                </select>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="lbl">Admin</label>
+                                <input type="text" id="edit-admin" name="admin" class="inp" readonly>
+                            </div>
+                            <div class="col-12 col-md-5">
+                                <label class="lbl">Notes</label>
+                                <input type="text" id="edit-notes" name="notes" class="inp"
+                                    placeholder="Keterangan tambahan…">
+                            </div>
+                            <div class="col-6 col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-info btn-sm fw-bold text-white w-100"
+                                    onclick="openSubOverlay('sub-edit-list-pre-process')">
+                                    <i class="bi bi-search me-1"></i>Daftar PP
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="sec-div">Detail Bon Bahan</div>
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <button type="button" class="btn btn-info btn-sm fw-bold text-white"
+                                onclick="openSubOverlay('sub-edit-add-bon')">
+                                <i class="bi bi-plus-circle me-1"></i>Tambah Bon
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addEditDetailRow()">
+                                <i class="bi bi-plus me-1"></i>Tambah Baris
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm detail-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:36px">REC</th>
+                                        <th style="width:110px">Bukti Proses</th>
+                                        <th style="width:110px">Proses Selanjutnya</th>
+                                        <th style="width:100px">Kadar</th>
+                                        <th style="width:96px">Tgl Proses</th>
+                                        <th style="width:76px">Operator 1</th>
+                                        <th style="width:76px">Operator 2</th>
+                                        <th style="width:80px">Rincian A</th>
+                                        <th style="width:80px">Rincian B</th>
+                                        <th style="width:80px">Berat (GR)</th>
+                                        <th style="width:90px">Produk</th>
+                                        <th style="width:76px">Notes</th>
+                                        <th style="width:34px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="edit-detail-body"></tbody>
+                                <tfoot>
+                                    <tr class="table-light">
+                                        <td colspan="9" class="text-end fw-bold" style="font-size:10px;">Grand Total
+                                            Berat (GR):</td>
+                                        <td><input type="text" id="edit-grand-total-gram" name="grand_total_gram"
+                                                class="fc text-end fw-bold text-success" value="0" readonly></td>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="sec-div">Ringkasan</div>
+                        <div class="row g-2">
+                            <div class="col-12 col-md-4">
+                                <div class="sum-box">
+                                    <span class="sum-lbl">Bahan Awal Pre Proses</span>
+                                    <input type="text" id="edit-initial-weight" name="initial_weight" class="sum-val"
+                                        value="0" readonly>
+                                    <small>GR</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="sum-box">
+                                    <span class="sum-lbl">Afkir Pre Proses</span>
+                                    <input type="text" id="edit-reject-weight" name="reject_weight"
+                                        class="sum-val danger" value="0" readonly>
+                                    <small>GR</small>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="sum-box">
+                                    <span class="sum-lbl">Susut Pre Proses</span>
+                                    <input type="text" id="edit-shrinkage-weight" name="shrinkage_weight"
+                                        class="sum-val danger" value="0" readonly>
+                                    <small>GR</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-end mt-3 pt-3 border-top">
+                            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                                <i class="bi bi-x-lg me-1"></i>Batal
+                            </button>
+                            <button type="submit" id="btn-update" class="btn btn-primary px-4 fw-bold">
+                                <i class="bi bi-floppy me-1"></i>Update
+                            </button>
+                        </div>
+
+                    </form>
+
+                    {{-- Sub-overlay A edit: Daftar Pre Proses --}}
+                    <div class="sub-overlay" id="sub-edit-list-pre-process">
+                        <div class="sub-box">
+                            <div class="sub-head">
+                                <h6><i class="bi bi-list-ul me-2"></i>Daftar Pre Proses</h6>
+                                <button type="button" onclick="closeSubOverlay('sub-edit-list-pre-process')"
+                                    style="background:rgba(0,0,0,.15);border:none;color:#333;width:28px;height:28px;border-radius:50%;cursor:pointer;">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                            <div class="sub-body">
+                                <input type="text" id="edit-search-pre-process" class="inp mb-2"
+                                    placeholder="Cari bukti atau periode...">
+                                <div id="edit-list-pre-process-rows">
+                                    <div class="text-center text-muted py-3" style="font-size:12px;">
+                                        <span class="spinner-border spinner-border-sm"></span> Memuat...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Sub-overlay B edit: Tambah Bon --}}
+                    <div class="sub-overlay" id="sub-edit-add-bon">
+                        <div class="sub-box wide">
+                            <div class="sub-head">
+                                <h6><i class="bi bi-box me-2"></i>Data Bon Bahan Baku</h6>
+                                <button type="button" onclick="closeSubOverlay('sub-edit-add-bon')"
+                                    style="background:rgba(0,0,0,.15);border:none;color:#333;width:28px;height:28px;border-radius:50%;cursor:pointer;">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                            <div class="sub-body">
+                                <input type="text" id="edit-search-bon" class="inp mb-2"
+                                    placeholder="Cari bukti atau nama bahan...">
+                                <div id="edit-list-bon-rows">
+                                    <div class="text-center text-muted py-3" style="font-size:12px;">
+                                        <span class="spinner-border spinner-border-sm"></span> Memuat...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>{{-- /modal-body --}}
+            </div>
+        </div>
+    </div>
 
     {{-- Delete form --}}
     <form id="form-delete" method="POST" style="display:none;">
@@ -1012,8 +1212,9 @@
         let bonListData = [];
         let karatListLoaded = false;
         let karatListData = [];
+        let editRowCount = 0;
 
-        // ── Select2 karat ─────────────────────────────────────────
+        // ── Select2 karat (tambah) ────────────────────────────────
         function initKaratSelect2(selectEl, selectedValue = '') {
             $(selectEl).select2({
                 placeholder: '— Kadar —',
@@ -1021,7 +1222,6 @@
                 width: '100%',
                 dropdownParent: $('#modal-add-pre-process')
             });
-
             if (selectedValue) {
                 if ($(selectEl).find(`option[value="${selectedValue}"]`).length === 0) {
                     $(selectEl).append(new Option(selectedValue, selectedValue, true, true));
@@ -1045,12 +1245,8 @@
             });
         }
 
-        // ── Fetch karat saat modal dibuka ─────────────────────────
         $('#modal-add-pre-process').on('shown.bs.modal', function() {
-            if (!karatListLoaded) {
-                fetchKaratList();
-            }
-            // init select2 semua .fc-karat yang belum diinit
+            if (!karatListLoaded) fetchKaratList();
             $('#detail-body .fc-karat:not(.select2-hidden-accessible)').each(function() {
                 initKaratSelect2(this);
             });
@@ -1061,21 +1257,60 @@
                 karatListLoaded = true;
                 karatListData = response;
                 populateAllKaratSelect();
+                populateAllEditKaratSelect();
             });
         }
+
+        // ── Select2 karat (edit) ──────────────────────────────────
+        function initEditKaratSelect2(selectEl) {
+            $(selectEl).select2({
+                placeholder: '— Kadar —',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#modal-edit-pre-process')
+            });
+        }
+
+        function populateEditKaratSelect(selectEl, selectedValue = '') {
+            const $sel = $(selectEl);
+            $sel.empty().append('<option value="">— Kadar —</option>');
+            karatListData.forEach(item => {
+                $sel.append(new Option(item.KARAT, item.KARAT, false, item.KARAT === selectedValue));
+            });
+            $sel.val(selectedValue).trigger('change');
+        }
+
+        function populateAllEditKaratSelect() {
+            $('#edit-detail-body .fc-karat-edit').each(function() {
+                const cur = $(this).data('selected') || '';
+                populateEditKaratSelect(this, cur);
+            });
+        }
+
+        $('#modal-edit-pre-process').on('shown.bs.modal', function() {
+            if (!karatListLoaded) fetchKaratList();
+        });
 
         // ── Sub-overlay ──────────────────────────────────────────
         function openSubOverlay(id) {
             document.getElementById(id).classList.add('active');
             if (id === 'sub-list-pre-process' && !preProcessListLoaded) fetchPreProcessList();
             if (id === 'sub-add-bon' && !bonListLoaded) fetchBonList();
+            if (id === 'sub-edit-list-pre-process') {
+                if (!preProcessListLoaded) fetchPreProcessList();
+                else renderEditPreProcessList(preProcessListData);
+            }
+            if (id === 'sub-edit-add-bon') {
+                if (!bonListLoaded) fetchBonList();
+                else renderEditBonList(bonListData);
+            }
         }
 
         function closeSubOverlay(id) {
             document.getElementById(id).classList.remove('active');
         }
 
-        // ── Fetch list pre process ───────────────────────────────
+        // ── Fetch pre process list ───────────────────────────────
         function fetchPreProcessList() {
             const dateFrom = $('[name="date_from"]').val();
             const dateTo = $('[name="date_to"]').val();
@@ -1087,11 +1322,11 @@
                 preProcessListLoaded = true;
                 preProcessListData = response;
                 renderPreProcessList(response);
+                renderEditPreProcessList(response);
             }).fail(function() {
                 $('#list-pre-process-rows').html(
-                    '<div class="text-center text-danger py-3" style="font-size:12px;">' +
-                    '<i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
-                );
+                    '<div class="text-center text-danger py-3" style="font-size:12px;"><i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
+                    );
             });
         }
 
@@ -1102,28 +1337,55 @@
                 return;
             }
             const rows = data.map(item => {
-                const voucherCode = item.BUKTI_PREPROSES || '';
-                const oldVoucher = item.BUKTI_PREPROSES_LAMA || '';
-                const period = item.PER || '';
-                return `
-                    <div class="lookup-row" onclick="selectPreProcess('${voucherCode}', '${oldVoucher}', '${period}')">
-                        <div>
-                            <div class="lookup-id">${voucherCode}</div>
-                            <div class="lookup-sub">Lama: ${oldVoucher || '—'} &nbsp;|&nbsp; Periode: ${period}</div>
-                        </div>
-                        <i class="bi bi-chevron-right text-warning"></i>
-                    </div>`;
+                const vc = item.BUKTI_PREPROSES || '';
+                const ov = item.BUKTI_PREPROSES_LAMA || '';
+                const pr = item.PER || '';
+                return `<div class="lookup-row" onclick="selectPreProcess('${vc}', '${ov}', '${pr}')">
+                    <div>
+                        <div class="lookup-id">${vc}</div>
+                        <div class="lookup-sub">Lama: ${ov || '—'} &nbsp;|&nbsp; Periode: ${pr}</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-warning"></i>
+                </div>`;
             }).join('');
             $('#list-pre-process-rows').html(rows);
         }
 
+        function renderEditPreProcessList(data) {
+            if (!data.length) {
+                $('#edit-list-pre-process-rows').html(
+                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>');
+                return;
+            }
+            const rows = data.map(item => {
+                const vc = item.BUKTI_PREPROSES || '';
+                const ov = item.BUKTI_PREPROSES_LAMA || '';
+                const pr = item.PER || '';
+                return `<div class="lookup-row" onclick="selectEditPreProcess('${vc}', '${ov}', '${pr}')">
+                    <div>
+                        <div class="lookup-id">${vc}</div>
+                        <div class="lookup-sub">Lama: ${ov || '—'} &nbsp;|&nbsp; Periode: ${pr}</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-warning"></i>
+                </div>`;
+            }).join('');
+            $('#edit-list-pre-process-rows').html(rows);
+        }
+
         $(document).on('input', '#input-search-pre-process', function() {
-            const keyword = $(this).val().toLowerCase();
-            const filtered = preProcessListData.filter(item =>
-                (item.BUKTI_PREPROSES || '').toLowerCase().includes(keyword) ||
-                (item.PER || '').toLowerCase().includes(keyword)
-            );
-            renderPreProcessList(filtered);
+            const kw = $(this).val().toLowerCase();
+            renderPreProcessList(preProcessListData.filter(i =>
+                (i.BUKTI_PREPROSES || '').toLowerCase().includes(kw) ||
+                (i.PER || '').toLowerCase().includes(kw)
+            ));
+        });
+
+        $(document).on('input', '#edit-search-pre-process', function() {
+            const kw = $(this).val().toLowerCase();
+            renderEditPreProcessList(preProcessListData.filter(i =>
+                (i.BUKTI_PREPROSES || '').toLowerCase().includes(kw) ||
+                (i.PER || '').toLowerCase().includes(kw)
+            ));
         });
 
         function selectPreProcess(voucherCode, oldVoucher, period) {
@@ -1132,7 +1394,13 @@
             closeSubOverlay('sub-list-pre-process');
         }
 
-        // ── Fetch list bon ───────────────────────────────────────
+        function selectEditPreProcess(voucherCode, oldVoucher, period) {
+            $('#edit-old-voucher').val(oldVoucher || '');
+            $('#edit-period').val(period || '');
+            closeSubOverlay('sub-edit-list-pre-process');
+        }
+
+        // ── Fetch bon list ───────────────────────────────────────
         function fetchBonList() {
             const dateFrom = $('[name="date_from"]').val();
             const dateTo = $('[name="date_to"]').val();
@@ -1144,11 +1412,11 @@
                 bonListLoaded = true;
                 bonListData = response;
                 renderBonList(response);
+                renderEditBonList(response);
             }).fail(function() {
                 $('#list-bon-rows').html(
-                    '<div class="text-center text-danger py-3" style="font-size:12px;">' +
-                    '<i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
-                );
+                    '<div class="text-center text-danger py-3" style="font-size:12px;"><i class="bi bi-exclamation-circle me-1"></i>Gagal memuat data.</div>'
+                    );
             });
         }
 
@@ -1158,31 +1426,49 @@
                     '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>');
                 return;
             }
-            const rows = data.map(item => `
-                <div class="lookup-row"
-                     onclick="selectBon('${item.BUKTI_BONBAHANBAKU}', '${item.BB_KARAT}', '${item.BB_NAMA}', '${item.BB_QTYGRAM}')">
+            $('#list-bon-rows').html(data.map(item => `
+                <div class="lookup-row" onclick="selectBon('${item.BUKTI_BONBAHANBAKU}', '${item.BB_KARAT}', '${item.BB_NAMA}', '${item.BB_QTYGRAM}')">
                     <div>
                         <div class="lookup-id">${item.BUKTI_BONBAHANBAKU}</div>
-                        <div class="lookup-sub">
-                            ${item.BB_NAMA || '—'} &nbsp;|&nbsp;
-                            Karat: ${item.BB_KARAT || '—'} &nbsp;|&nbsp;
-                            Gram: ${item.BB_QTYGRAM || '0'}
-                        </div>
+                        <div class="lookup-sub">${item.BB_NAMA || '—'} &nbsp;|&nbsp; Karat: ${item.BB_KARAT || '—'} &nbsp;|&nbsp; Gram: ${item.BB_QTYGRAM || '0'}</div>
                     </div>
                     <i class="bi bi-chevron-right text-warning"></i>
-                </div>`).join('');
-            $('#list-bon-rows').html(rows);
+                </div>`).join(''));
+        }
+
+        function renderEditBonList(data) {
+            if (!data.length) {
+                $('#edit-list-bon-rows').html(
+                    '<div class="text-center text-muted py-3" style="font-size:12px;">Tidak ada data.</div>');
+                return;
+            }
+            $('#edit-list-bon-rows').html(data.map(item => `
+                <div class="lookup-row" onclick="selectEditBon('${item.BUKTI_BONBAHANBAKU}', '${item.BB_KARAT}', '${item.BB_NAMA}', '${item.BB_QTYGRAM}')">
+                    <div>
+                        <div class="lookup-id">${item.BUKTI_BONBAHANBAKU}</div>
+                        <div class="lookup-sub">${item.BB_NAMA || '—'} &nbsp;|&nbsp; Karat: ${item.BB_KARAT || '—'} &nbsp;|&nbsp; Gram: ${item.BB_QTYGRAM || '0'}</div>
+                    </div>
+                    <i class="bi bi-chevron-right text-warning"></i>
+                </div>`).join(''));
         }
 
         $(document).on('input', '#input-search-bon', function() {
-            const keyword = $(this).val().toLowerCase();
-            const filtered = bonListData.filter(item =>
-                (item.BUKTI_BONBAHANBAKU || '').toLowerCase().includes(keyword) ||
-                (item.BB_NAMA || '').toLowerCase().includes(keyword)
-            );
-            renderBonList(filtered);
+            const kw = $(this).val().toLowerCase();
+            renderBonList(bonListData.filter(i =>
+                (i.BUKTI_BONBAHANBAKU || '').toLowerCase().includes(kw) ||
+                (i.BB_NAMA || '').toLowerCase().includes(kw)
+            ));
         });
 
+        $(document).on('input', '#edit-search-bon', function() {
+            const kw = $(this).val().toLowerCase();
+            renderEditBonList(bonListData.filter(i =>
+                (i.BUKTI_BONBAHANBAKU || '').toLowerCase().includes(kw) ||
+                (i.BB_NAMA || '').toLowerCase().includes(kw)
+            ));
+        });
+
+        // ── Select bon (tambah) ──────────────────────────────────
         function selectBon(voucherCode, karat, productName, gram) {
             let filled = false;
             $('#detail-body tr').each(function() {
@@ -1191,12 +1477,9 @@
                     pv.val(voucherCode);
                     $(this).find('.fc-gram-a').val(gram);
                     $(this).find('[name="product_name[]"]').val(productName);
-                    // set karat di select2
-                    const karatSel = $(this).find('.fc-karat');
-                    if (karatSel.find(`option[value="${karat}"]`).length === 0) {
-                        karatSel.append(new Option(karat, karat));
-                    }
-                    karatSel.val(karat).trigger('change');
+                    const ks = $(this).find('.fc-karat');
+                    if (ks.find(`option[value="${karat}"]`).length === 0) ks.append(new Option(karat, karat));
+                    ks.val(karat).trigger('change');
                     calcRow($(this).find('.fc-gram-a')[0]);
                     filled = true;
                     return false;
@@ -1211,7 +1494,33 @@
             closeSubOverlay('sub-add-bon');
         }
 
-        // ── Delete detail row ────────────────────────────────────
+        // ── Select bon (edit) ────────────────────────────────────
+        function selectEditBon(voucherCode, karat, productName, gram) {
+            let filled = false;
+            $('#edit-detail-body tr').each(function() {
+                const pv = $(this).find('.fc-process-voucher');
+                if (pv.val() === '') {
+                    pv.val(voucherCode);
+                    $(this).find('.fc-gram-a-edit').val(gram);
+                    $(this).find('[name="product_name[]"]').val(productName);
+                    const ks = $(this).find('.fc-karat-edit');
+                    if (ks.find(`option[value="${karat}"]`).length === 0) ks.append(new Option(karat, karat));
+                    ks.val(karat).trigger('change');
+                    calcEditRow($(this).find('.fc-gram-a-edit')[0]);
+                    filled = true;
+                    return false;
+                }
+            });
+            if (!filled) addEditDetailRow({
+                voucher: voucherCode,
+                karat,
+                product: productName,
+                gram
+            });
+            closeSubOverlay('sub-edit-add-bon');
+        }
+
+        // ── Delete row (tambah) ──────────────────────────────────
         $(document).on('click', '.btn-delete-row', function() {
             if ($('#detail-body tr').length <= 1) {
                 alert('Minimal harus ada 1 baris detail.');
@@ -1229,28 +1538,41 @@
             });
         }
 
-        // ── Add detail row ───────────────────────────────────────
+        // ── Delete row (edit) ────────────────────────────────────
+        $(document).on('click', '.btn-delete-edit-row', function() {
+            if ($('#edit-detail-body tr').length <= 1) {
+                alert('Minimal harus ada 1 baris detail.');
+                return;
+            }
+            if (!confirm('Hapus baris ini?')) return;
+            $(this).closest('tr').remove();
+            reNumberEditRows();
+            calcEditGrandTotal();
+        });
+
+        function reNumberEditRows() {
+            $('#edit-detail-body tr').each(function(i) {
+                $(this).find('.fc-rec').val(i + 1);
+            });
+        }
+
+        // ── Add row (tambah) ─────────────────────────────────────
         let rowCount = 1;
 
         function addDetailRow(data = {}) {
             rowCount++;
             const today = "{{ date('d-m-Y') }}";
-            const opts = `
-                <option value="BOL">BOLA</option><option value="COR">COR</option>
+            const opts = `<option value="BOL">BOLA</option><option value="COR">COR</option>
                 <option value="GLN">GILING</option><option value="HLL">HOLLOW</option>
                 <option value="PPL">PATRI PLAT</option><option value="PIP">PIPA</option>
                 <option value="STM">STAMPING</option><option value="TRK">TARIK</option>
                 <option value="SRT">SORTIR</option>`;
 
-            const row = `<tr>
+            $('#detail-body').append(`<tr>
                 <td><input name="rec[]" type="text" value="${rowCount}" class="fc fc-rec" readonly></td>
                 <td><input name="process_voucher[]" type="text" value="${data.voucher || ''}" class="fc fc-process-voucher" readonly></td>
                 <td><select name="next_process[]" class="fc fc-next-process" required>${opts}</select></td>
-                <td>
-                    <select name="karat[]" class="fc-karat" style="width:100%" required>
-                        <option value="">— Kadar —</option>
-                    </select>
-                </td>
+                <td><select name="karat[]" class="fc-karat" style="width:100%" required><option value="">— Kadar —</option></select></td>
                 <td><input name="process_date_detail[]" type="text" class="fc fp-date" value="${today}" required></td>
                 <td><input name="operator_a[]" type="text" class="fc"></td>
                 <td><input name="operator_b[]" type="text" class="fc"></td>
@@ -1267,24 +1589,70 @@
                 <td><input name="gram_total[]" type="text" value="0" class="fc text-end text-success fw-bold fc-gram-total" readonly></td>
                 <td><input name="product_name[]" type="text" value="${data.product || ''}" class="fc" required></td>
                 <td><input name="detail_notes[]" type="text" class="fc"></td>
-                <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0">
-                    <i class="bi bi-trash"></i>
-                </button></td>
-            </tr>`;
+                <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-row px-1 py-0"><i class="bi bi-trash"></i></button></td>
+            </tr>`);
 
-            $('#detail-body').append(row);
             initFlatpickr();
             reNumberRows();
-
-            // init select2 & populate karat di baris baru
-            const newKaratSel = $('#detail-body tr:last .fc-karat');
-            initKaratSelect2(newKaratSel[0]);
-            if (karatListLoaded) {
-                populateKaratSelect(newKaratSel[0], data.karat || '');
-            }
+            const newSel = $('#detail-body tr:last .fc-karat');
+            initKaratSelect2(newSel[0]);
+            if (karatListLoaded) populateKaratSelect(newSel[0], data.karat || '');
         }
 
-        // ── Calc row total ───────────────────────────────────────
+        // ── Add row (edit) ───────────────────────────────────────
+        function addEditDetailRow(data = {}) {
+            editRowCount++;
+            const today = "{{ date('d-m-Y') }}";
+            const processDate = data.processDate ?
+                (function() {
+                    const p = data.processDate.split('-');
+                    return p[2] + '-' + p[1] + '-' + p[0];
+                })() :
+                today;
+
+            const makeOpt = (val, lbl) =>
+                `<option value="${val}" ${data.nextProcess === val ? 'selected' : ''}>${lbl}</option>`;
+
+            const opts = makeOpt('BOL', 'BOLA') + makeOpt('COR', 'COR') + makeOpt('GLN', 'GILING') +
+                makeOpt('HLL', 'HOLLOW') + makeOpt('PPL', 'PATRI PLAT') + makeOpt('PIP', 'PIPA') +
+                makeOpt('STM', 'STAMPING') + makeOpt('TRK', 'TARIK') + makeOpt('SRT', 'SORTIR');
+
+            $('#edit-detail-body').append(`<tr>
+                <td><input name="rec[]" type="text" value="${data.rec || editRowCount}" class="fc fc-rec" readonly></td>
+                <td><input name="process_voucher[]" type="text" value="${data.voucher || ''}" class="fc fc-process-voucher" readonly></td>
+                <td><select name="next_process[]" class="fc fc-next-process" required>${opts}</select></td>
+                <td>
+                    <select name="karat[]" class="fc-karat-edit" style="width:100%" required data-selected="${data.karat || ''}">
+                        <option value="${data.karat || ''}">${data.karat || '— Kadar —'}</option>
+                    </select>
+                </td>
+                <td><input name="process_date_detail[]" type="text" class="fc fp-date" value="${processDate}" required></td>
+                <td><input name="operator_a[]" type="text" class="fc" value="${data.operatorA || ''}"></td>
+                <td><input name="operator_b[]" type="text" class="fc" value="${data.operatorB || ''}"></td>
+                <td>
+                    <input name="gram_a[]" type="text" value="${data.gramA || '0'}" class="fc text-end text-primary fw-bold fc-gram-a-edit" oninput="calcEditRow(this)">
+                    <input name="gram_b[]" type="text" value="${data.gramB || '0'}" class="fc text-end text-primary fw-bold fc-gram-b-edit mt-1" oninput="calcEditRow(this)">
+                    <input name="gram_c[]" type="text" value="${data.gramC || '0'}" class="fc text-end text-primary fw-bold fc-gram-c-edit mt-1" oninput="calcEditRow(this)">
+                </td>
+                <td>
+                    <input name="gram_d[]" type="text" value="${data.gramD || '0'}" class="fc text-end text-primary fw-bold fc-gram-d-edit" oninput="calcEditRow(this)">
+                    <input name="gram_e[]" type="text" value="${data.gramE || '0'}" class="fc text-end text-primary fw-bold fc-gram-e-edit mt-1" oninput="calcEditRow(this)">
+                    <input name="gram_f[]" type="text" value="${data.gramF || '0'}" class="fc text-end text-primary fw-bold fc-gram-f-edit mt-1" oninput="calcEditRow(this)">
+                </td>
+                <td><input name="gram_total[]" type="text" value="${data.gramTotal || '0'}" class="fc text-end text-success fw-bold fc-gram-total-edit" readonly></td>
+                <td><input name="product_name[]" type="text" value="${data.product || ''}" class="fc" required></td>
+                <td><input name="detail_notes[]" type="text" value="${data.notes || ''}" class="fc"></td>
+                <td><button type="button" class="btn btn-sm btn-outline-danger btn-delete-edit-row px-1 py-0"><i class="bi bi-trash"></i></button></td>
+            </tr>`);
+
+            initFlatpickr();
+            reNumberEditRows();
+            const newSel = $('#edit-detail-body tr:last .fc-karat-edit');
+            initEditKaratSelect2(newSel[0]);
+            if (karatListLoaded) populateEditKaratSelect(newSel[0], data.karat || '');
+        }
+
+        // ── Calc (tambah) ────────────────────────────────────────
         function calcRow(el) {
             const row = $(el).closest('tr');
             let total = 0;
@@ -1303,9 +1671,92 @@
             $('#input-grand-total-gram').val(gt.toFixed(3));
         }
 
+        // ── Calc (edit) ──────────────────────────────────────────
+        function calcEditRow(el) {
+            const row = $(el).closest('tr');
+            let total = 0;
+            row.find('.fc-gram-a-edit,.fc-gram-b-edit,.fc-gram-c-edit,.fc-gram-d-edit,.fc-gram-e-edit,.fc-gram-f-edit')
+                .each(function() {
+                    total += parseFloat($(this).val().replace(/,/g, '')) || 0;
+                });
+            row.find('.fc-gram-total-edit').val(total.toFixed(3));
+            calcEditGrandTotal();
+        }
+
+        function calcEditGrandTotal() {
+            let gt = 0;
+            $('.fc-gram-total-edit').each(function() {
+                gt += parseFloat($(this).val()) || 0;
+            });
+            $('#edit-grand-total-gram').val(gt.toFixed(3));
+        }
+
+        // ── Open edit modal ──────────────────────────────────────
+        function openEditModal(id) {
+            $('#edit-loading').show();
+            $('#form-edit-pre-process').hide();
+            $('#modal-edit-pre-process').modal('show');
+
+            $.get("{{ url('PreProcessTransaction') }}/" + id + "/edit", function(res) {
+                const h = res.header;
+                const d = res.detail;
+
+                $('#form-edit-pre-process').attr('action', "{{ url('PreProcessTransaction') }}/" + id);
+
+                $('#edit-voucher-code').val(h.BUKTI_PREPROSES || '');
+                $('#edit-old-voucher').val(h.BUKTI_PREPROSES_LAMA || '');
+                $('#edit-period').val(h.PER || '');
+                $('#edit-admin').val(h.ADMIN || '');
+                $('#edit-notes').val(h.NOTES || '');
+                $('#edit-initial-weight').val(h.GT_QTYGRAM_PROSESSEBELUMNYA || '0');
+                $('#edit-reject-weight').val(h.GT_AFKIRQTYGRAMPREPROSES || '0');
+                $('#edit-shrinkage-weight').val(h.GT_SUSUTQTYGRAMPREPROSES || '0');
+
+                if (h.TGL_PREPROSES) {
+                    const p = h.TGL_PREPROSES.split('-');
+                    $('#edit-process-date').val(p[2] + '-' + p[1] + '-' + p[0]);
+                }
+
+                $('#edit-detail-body').empty();
+                editRowCount = 0;
+
+                d.forEach(function(row) {
+                    addEditDetailRow({
+                        rec: row.REC,
+                        voucher: row.BUKTI_PROSES,
+                        nextProcess: row.PROSES_SELANJUTNYA,
+                        karat: row.PP_KARAT,
+                        processDate: row.TGL_PROSES,
+                        operatorA: row.OPERATOR_A_PROSES,
+                        operatorB: row.OPERATOR_B_PROSES,
+                        gramA: row.QTYGRAM_A_PROSES,
+                        gramB: row.QTYGRAM_B_PROSES,
+                        gramC: row.QTYGRAM_C_PROSES,
+                        gramD: row.QTYGRAM_D_PROSES,
+                        gramE: row.QTYGRAM_E_PROSES,
+                        gramF: row.QTYGRAM_F_PROSES,
+                        gramTotal: row.QTYGRAM_PROSES,
+                        product: row.PR_NAMA,
+                        notes: row.KET,
+                    });
+                });
+
+                calcEditGrandTotal();
+                initFlatpickr();
+
+                $('#edit-loading').hide();
+                $('#form-edit-pre-process').show();
+            });
+        }
+
         // ── Submit loading ───────────────────────────────────────
         $('#form-pre-process').on('submit', function() {
             $('#btn-save').html('<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...').prop(
+                'disabled', true);
+        });
+
+        $('#form-edit-pre-process').on('submit', function() {
+            $('#btn-update').html('<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...').prop(
                 'disabled', true);
         });
 

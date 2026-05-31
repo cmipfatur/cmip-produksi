@@ -45,4 +45,53 @@ class PreProcessTransactionModel extends Model
     {
         return DB::table($table)->insert($data);
     }
+
+    public function getEditData($id)
+    {
+        $header = DB::table('ppic_preproses')
+            ->where('NO_ID', $id)
+            ->first();
+
+        $detail = DB::table('ppic_preproses_d')
+            ->where('ID', $id)
+            ->orderBy('REC', 'ASC')
+            ->get();
+
+        return [
+            'header' => $header,
+            'detail' => $detail,
+        ];
+    }
+
+    public function updateData($id, array $headerData, array $rows)
+    {
+        DB::transaction(function () use ($id, $headerData, $rows) {
+            DB::table('ppic_preproses')
+                ->where('NO_ID', $id)
+                ->update($headerData);
+
+            DB::table('ppic_preproses_d')
+                ->where('ID', $id)
+                ->delete();
+
+            $totalGram = 0;
+            $totalPcs  = 0;
+
+            if (!empty($rows)) {
+                $this->storeData('ppic_preproses_d', $rows);
+
+                foreach ($rows as $row) {
+                    $totalGram += (float) ($row['QTYGRAM_PROSES'] ?? 0);
+                    $totalPcs  += (float) ($row['QTYPCS_PROSES']  ?? 0);
+                }
+            }
+
+            DB::table('ppic_preproses')
+                ->where('NO_ID', $id)
+                ->update([
+                    'GT_QTYGRAM_PROSES' => $totalGram,
+                    'GT_QTYPCS_PROSES'  => $totalPcs,
+                ]);
+        });
+    }
 }

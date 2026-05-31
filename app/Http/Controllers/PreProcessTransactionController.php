@@ -6,6 +6,7 @@ use App\Models\PreProcessTransactionModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 
 class PreProcessTransactionController extends Controller
@@ -138,6 +139,10 @@ class PreProcessTransactionController extends Controller
             $processVoucher = $processVouchers[$index] ?? '';
             $productName = $productNames[$index] ?? '';
             $nextProcess = strtoupper($nextProcesses[$index] ?? '');
+            // generate bukti proses if not provided (mimic CodeIgniter behavior)
+            if (empty($processVoucher) && !empty($nextProcess)) {
+                $processVoucher = $this->generateBuktiProses($nextProcess, $period);
+            }
             $karat = strtoupper($karats[$index] ?? '');
             $processDate = $normalizeDate($processDates[$index] ?? '');
             $gramA = $normalizeNumber($gramsA[$index] ?? 0);
@@ -180,6 +185,7 @@ class PreProcessTransactionController extends Controller
             ];
         }
 
+
         DB::transaction(function () use ($headerData, $rows) {
             $preProcessId = DB::table('ppic_preproses')->insertGetId($headerData);
 
@@ -205,6 +211,17 @@ class PreProcessTransactionController extends Controller
                     'GT_QTYPCS_PROSES' => $totalPcs,
                 ]);
         });
+
+        // Call stored procedure after commit to avoid rolling back transaction
+        try {
+            DB::statement("CALL ppic_preproses_isiprosesselanjutnya_upd(?)", [
+                $headerData['BUKTI_PREPROSES']
+            ]);
+        } catch (\Exception $e) {
+            Log::error('ppic_preproses_isiprosesselanjutnya_upd failed on store: ' . $e->getMessage(), [
+                'bukti_preproses' => $headerData['BUKTI_PREPROSES'] ?? null
+            ]);
+        }
 
         $redirectParams = array_filter([
             'date_from' => $request->input('date_from'),
@@ -290,6 +307,11 @@ class PreProcessTransactionController extends Controller
 
             if (empty($rec) && empty($processVoucher) && empty($productName)) continue;
 
+            $nextProcess = strtoupper($request->input('next_process', [])[$index] ?? '');
+            if (empty($processVoucher) && !empty($nextProcess)) {
+                $processVoucher = $this->generateBuktiProses($nextProcess, $period);
+            }
+
             $gramA = $normalizeNumber($request->input('gram_a', [])[$index] ?? 0);
             $gramB = $normalizeNumber($request->input('gram_b', [])[$index] ?? 0);
             $gramC = $normalizeNumber($request->input('gram_c', [])[$index] ?? 0);
@@ -324,7 +346,20 @@ class PreProcessTransactionController extends Controller
             ];
         }
 
-        (new PreProcessTransactionModel())->updateData($id, $headerData, $rows);
+        DB::transaction(function () use ($id, $headerData, $rows, $request) {
+            (new PreProcessTransactionModel())->updateData($id, $headerData, $rows);
+        });
+
+        try {
+            DB::statement("CALL ppic_preproses_isiprosesselanjutnya_upd(?)", [
+                strtoupper($request->input('voucher_code'))
+            ]);
+        } catch (\Exception $e) {
+            Log::error('ppic_preproses_isiprosesselanjutnya_upd failed on update: ' . $e->getMessage(), [
+                'bukti_preproses' => strtoupper($request->input('voucher_code')) ?? null,
+                'id' => $id
+            ]);
+        }
 
         $redirectParams = array_filter([
             'date_from' => $request->input('date_from'),
@@ -343,5 +378,50 @@ class PreProcessTransactionController extends Controller
         ]);
 
         return redirect()->route('PreProcessTransaction.index', $redirectParams)->with('success', 'Data berhasil dihapus.');
+    }
+
+    /**
+     * Generate next BUKTI_PROSES code similar to CodeIgniter implementation
+     * Example: TRK-0526-0001
+     */
+    private function generateBuktiProses($kode, $per)
+    {
+        $kode = strtoupper($kode);
+        // derive month and year two-digit from PER (expecting format like '0526')
+        $bulan = substr($per, 0, 2);
+        $tahun = substr($per, -2);
+        if (strlen($bulan) !== 2 || strlen($tahun) !== 2) {
+            $bulan = date('m');
+            $tahun = date('y');
+        }
+
+        $map = [
+            'BOL' => ['table' => 'ppic_rkbola', 'col' => 'BUKTI_RKBOLA'],
+            'COR' => ['table' => 'ppic_rkcor', 'col' => 'BUKTI_RKCOR'],
+            'GLN' => ['table' => 'ppic_rkgiling', 'col' => 'BUKTI_RKGILING'],
+            'HLL' => ['table' => 'ppic_rkhollow', 'col' => 'BUKTI_RKHOLLOW'],
+            'PPL' => ['table' => 'ppic_rkpatriplat', 'col' => 'BUKTI_RKPATRIPLAT'],
+            'PIP' => ['table' => 'ppic_rkpipa', 'col' => 'BUKTI_RKPIPA'],
+            'STM' => ['table' => 'ppic_rkstamping', 'col' => 'BUKTI_RKSTAMPING'],
+            'TRK' => ['table' => 'ppic_rktarik', 'col' => 'BUKTI_RKTARIK'],
+            'SRT' => ['table' => 'ppic_bstsortir', 'col' => 'BUKTI_BSTSORTIR'],
+        ];
+
+        if (!isset($map[$kode])) return '';
+
+        $table = $map[$kode]['table'];
+        $col = $map[$kode]['col'];
+
+        $sql = "SELECT RIGHT($col, 4) AS BUKTI_AKHIR FROM $table WHERE PER = ? ORDER BY $col DESC LIMIT 1";
+        $row = DB::selectOne($sql, [$per]);
+
+        if (empty($row) || empty($row->BUKTI_AKHIR)) {
+            $next = 1;
+        } else {
+            $next = intval($row->BUKTI_AKHIR) + 1;
+        }
+
+        $no = str_pad($next, 4, '0', STR_PAD_LEFT);
+        return $kode . '-' . $bulan . $tahun . '-' . $no;
     }
 }

@@ -206,7 +206,12 @@ class PreProcessTransactionController extends Controller
                 ]);
         });
 
-        return redirect()->route('PreProcessTransaction.index')->with('success', 'Data berhasil disimpan.');
+        $redirectParams = array_filter([
+            'date_from' => $request->input('date_from'),
+            'date_to' => $request->input('date_to'),
+        ]);
+
+        return redirect()->route('PreProcessTransaction.index', $redirectParams)->with('success', 'Data berhasil disimpan.');
     }
 
     public function edit($id)
@@ -321,12 +326,22 @@ class PreProcessTransactionController extends Controller
 
         (new PreProcessTransactionModel())->updateData($id, $headerData, $rows);
 
-        return redirect()->route('PreProcessTransaction.index')->with('success', 'Data berhasil diperbarui.');
+        $redirectParams = array_filter([
+            'date_from' => $request->input('date_from'),
+            'date_to' => $request->input('date_to'),
+        ]);
+
+        return redirect()->route('PreProcessTransaction.index', $redirectParams)->with('success', 'Data berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         // delete logic here
-        return redirect()->route('PreProcessTransaction.index')->with('success', 'Data berhasil dihapus.');
+        $redirectParams = array_filter([
+            'date_from' => request('date_from'),
+            'date_to' => request('date_to'),
+        ]);
+
+        return redirect()->route('PreProcessTransaction.index', $redirectParams)->with('success', 'Data berhasil dihapus.');
     }
 }

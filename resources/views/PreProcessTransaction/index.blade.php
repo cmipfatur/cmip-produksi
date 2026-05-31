@@ -724,6 +724,8 @@
                 <div class="modal-body p-3 p-md-4" style="position:relative;">
                     <form id="form-pre-process" action="{{ route('PreProcessTransaction.store') }}" method="POST">
                         @csrf
+                        <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                        <input type="hidden" name="date_to" value="{{ request('date_to') }}">
 
                         <div class="sec-div">Informasi Pre Proses</div>
                         <div class="row g-2">
@@ -991,6 +993,8 @@
                     <form id="form-edit-pre-process" method="POST" style="display:none;">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                        <input type="hidden" name="date_to" value="{{ request('date_to') }}">
 
                         <div class="sec-div">Informasi Pre Proses</div>
                         <div class="row g-2">
@@ -1172,6 +1176,8 @@
     <form id="form-delete" method="POST" style="display:none;">
         @csrf
         @method('DELETE')
+        <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+        <input type="hidden" name="date_to" value="{{ request('date_to') }}">
     </form>
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
